@@ -26,17 +26,18 @@ Implements:
 
 ## 📂 Project Structure
 
-
+```text
 src/main/java/hcmut/edu/vn/tutor_support_system/
 │
-├── controller/ # REST controllers (TutorSearch, SessionBooking)
-├── service/ # Business logic (search, booking)
-├── repository/ # Hard-coded data (no database)
-├── entity/ # Domain models
-├── dto/ # DTO classes for responses
-├── mapper/ # DtoMapper → converts entities to DTOs
-├── exception/ # Custom exceptions
-└── TutorSupportSystemApplication.java # Spring Boot entry point
+├── controller/          # REST controllers (TutorSearch, SessionBooking)
+├── service/             # Business logic (search, booking)
+├── repository/          # Hard-coded data (no database)
+├── entity/              # Domain models
+├── dto/                 # DTO classes for responses
+├── mapper/              # DtoMapper → converts entities to DTOs
+├── exception/           # Custom exceptions
+└── TutorSupportSystemApplication.java  # Spring Boot entry point
+
 
 
 ## ▶️ Run the Project
