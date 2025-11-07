@@ -67,6 +67,6 @@ mvn clean install && java -jar target/tutor-support-system-0.0.1-SNAPSHOT.jar
 | Get available slots              | http://localhost:8080/api/tutors/tutor-2/slots                          |
 
 ## ⚠️ Notes
-No database required — repositories hold sample data.
-All controllers return DTOs; entities are never exposed directly.
-To reload data, just restart the server.
+- No database required — repositories hold sample data.
+- All controllers return DTOs; entities are never exposed directly.
+- To reload data, just restart the server.
