@@ -53,7 +53,10 @@ ReadinessState changed to ACCEPTING_TRAFFIC
 """
 5. Visit: http://localhost:8080
 
-Option B – Run from Terminal (JAR file): mvn clean install && java -jar target/tutor-support-system-0.0.1-SNAPSHOT.jar
+Option 2: Run from Terminal (JAR file)
+```text
+mvn clean install && java -jar target/tutor-support-system-0.0.1-SNAPSHOT.jar
+```
 
 ## 🧪 Quick API Tests
 | Action                           | URL                                                                     |
