@@ -12,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Tutor extends User {
 
-    private String tutorCode;          // can be staff ID or student ID for peer tutor
+    private String tutorId;          // can be staff ID or student ID for peer tutor
     private String bio;
 
     private List<String> expertiseAreas = new ArrayList<>(); // "CO2013", "AI", etc.
