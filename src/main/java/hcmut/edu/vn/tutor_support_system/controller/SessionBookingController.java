@@ -1,8 +1,10 @@
 package hcmut.edu.vn.tutor_support_system.controller;
 
+import hcmut.edu.vn.tutor_support_system.dto.AvailabilityDto;
 import hcmut.edu.vn.tutor_support_system.dto.SessionBookingRequest;
 import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
 import hcmut.edu.vn.tutor_support_system.entity.Availability;
+import hcmut.edu.vn.tutor_support_system.mapper.DtoMapper;
 import hcmut.edu.vn.tutor_support_system.service.SessionBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +19,17 @@ public class SessionBookingController {
 
     private final SessionBookingService sessionBookingService;
 
-    /**
-     * UC-5 step 2 (+ alt 2a):
-     * Student clicks "Book session" -> system shows available slots for the selected tutor.
-     */
+    // UC-5 step 2 (+ alt 2a): return DTOs to avoid cycles
     @GetMapping("/tutors/{tutorId}/slots")
-    public ResponseEntity<List<Availability>> getAvailableSlots(@PathVariable String tutorId) {
+    public ResponseEntity<List<AvailabilityDto>> getAvailableSlots(@PathVariable String tutorId) {
         List<Availability> slots = sessionBookingService.getAvailableSlots(tutorId);
-        return ResponseEntity.ok(slots);
+        List<AvailabilityDto> dtos = slots.stream()
+                .map(DtoMapper::toAvailabilityDto)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
-    /**
-     * UC-5 steps 3–7:
-     * Student selects a slot and confirms booking.
-     */
+    // UC-5 steps 3–7
     @PostMapping("/tutors/{tutorId}/sessions")
     public ResponseEntity<SessionResponseDto> bookSession(
             @PathVariable String tutorId,
