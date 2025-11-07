@@ -26,6 +26,7 @@ Implements:
 
 ## 📂 Project Structure
 
+
 src/main/java/hcmut/edu/vn/tutor_support_system/
 │
 ├── controller/ # REST controllers (TutorSearch, SessionBooking)
@@ -37,7 +38,8 @@ src/main/java/hcmut/edu/vn/tutor_support_system/
 ├── exception/ # Custom exceptions
 └── TutorSupportSystemApplication.java # Spring Boot entry point
 
-▶️ **Run the Project**
+
+## ▶️ Run the Project
 Option 1: Run with VS Code Run button
 1. Open the project folder in VS Code.
 2. Open TutorSupportSystemApplication.java.
@@ -52,7 +54,7 @@ ReadinessState changed to ACCEPTING_TRAFFIC
 
 Option B – Run from Terminal (JAR file): mvn clean install && java -jar target/tutor-support-system-0.0.1-SNAPSHOT.jar
 
-🧪 Quick API Tests
+## 🧪 Quick API Tests
 | Action                           | URL                                                                     |
 | -------------------------------- | ----------------------------------------------------------------------- |
 | List all tutors                  | http://localhost:8080/api/tutors/search                                 |
@@ -60,7 +62,7 @@ Option B – Run from Terminal (JAR file): mvn clean install && java -jar target
 | View a tutor profile             | http://localhost:8080/api/tutors/tutor-1                                |
 | Get available slots              | http://localhost:8080/api/tutors/tutor-2/slots                          |
 
-**⚠️ Notes**
+## ⚠️ Notes
 No database required — repositories hold sample data.
 All controllers return DTOs; entities are never exposed directly.
 To reload data, just restart the server.
