@@ -5,9 +5,11 @@ import hcmut.edu.vn.tutor_support_system.dto.TutorSearchResultDto;
 import hcmut.edu.vn.tutor_support_system.entity.Availability;
 import hcmut.edu.vn.tutor_support_system.entity.SessionMode;
 import hcmut.edu.vn.tutor_support_system.entity.Tutor;
+import hcmut.edu.vn.tutor_support_system.repository.AvailabilityRepository;
 import hcmut.edu.vn.tutor_support_system.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,9 +19,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TutorSearchService {
 
     private final TutorRepository tutorRepository;
+    private final AvailabilityRepository availabilityRepository;
 
     /**
      * UC-4: Tutor Search & Intelligent Matching (Browse + AI Recommendation)
@@ -57,7 +61,7 @@ public class TutorSearchService {
         // Filter by mode using availabilities
         if (mode != null) {
             filtered = filtered.stream()
-                    .filter(t -> tutorRepository.findAvailabilitiesByTutorId(t.getTutorId())
+                    .filter(t -> availabilityRepository.findByTutorAndPublishedTrue(t)
                             .stream()
                             .anyMatch(a -> a.getMode() == mode
                                     || a.getMode() == SessionMode.HYBRID))
@@ -77,7 +81,7 @@ public class TutorSearchService {
 
         List<TutorSearchResultDto> result = new ArrayList<>();
         for (Tutor tutor : filtered) {
-            List<Availability> slots = tutorRepository.findAvailabilitiesByTutorId(tutor.getTutorId());
+            List<Availability> slots = availabilityRepository.findByTutorAndPublishedTrue(tutor);
 
             List<AvailabilityDto> slotDtos = slots.stream()
                     .map(this::toAvailabilityDto)

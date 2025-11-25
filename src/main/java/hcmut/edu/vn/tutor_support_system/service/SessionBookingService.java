@@ -6,11 +6,13 @@ import hcmut.edu.vn.tutor_support_system.entity.*;
 import hcmut.edu.vn.tutor_support_system.exception.InvalidSessionDetailsException;
 import hcmut.edu.vn.tutor_support_system.exception.ResourceNotFoundException;
 import hcmut.edu.vn.tutor_support_system.exception.SlotUnavailableException;
+import hcmut.edu.vn.tutor_support_system.repository.AvailabilityRepository;
 import hcmut.edu.vn.tutor_support_system.repository.SessionRepository;
 import hcmut.edu.vn.tutor_support_system.repository.StudentRepository;
 import hcmut.edu.vn.tutor_support_system.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,21 +20,25 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SessionBookingService {
 
     private final TutorRepository tutorRepository;
     private final StudentRepository studentRepository;
     private final SessionRepository sessionRepository;
+    private final AvailabilityRepository availabilityRepository;
 
     /**
      * UC-5 step 2 (+ alt 2a): show available slots for a tutor.
      */
+    @Transactional(readOnly = true)
     public List<Availability> getAvailableSlots(String tutorId) {
-        // Preconditions PRE-3 & PRE-4 are checked by ensuring tutor exists and has slots
-        tutorRepository.findById(tutorId)
+        // Preconditions PRE-3 & PRE-4 are checked by ensuring tutor exists and has
+        // slots
+        Tutor tutor = tutorRepository.findByTutorId(tutorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tutor not found: " + tutorId));
 
-        return tutorRepository.findAvailabilitiesByTutorId(tutorId);
+        return availabilityRepository.findByTutorAndPublishedTrue(tutor);
     }
 
     /**
@@ -40,16 +46,18 @@ public class SessionBookingService {
      */
     public SessionResponseDto bookSession(String tutorId, SessionBookingRequest request) {
 
-        // PRE-2/3: student profile authenticated + selected tutor (authentication via SSO is outside this service)
-        Student student = studentRepository.findById(request.getStudentId())
+        // PRE-2/3: student profile authenticated + selected tutor (authentication via
+        // SSO is outside this service)
+        Student student = studentRepository.findByStudentId(request.getStudentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found: " + request.getStudentId()));
 
-        Tutor tutor = tutorRepository.findById(tutorId)
+        Tutor tutor = tutorRepository.findByTutorId(tutorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tutor not found: " + tutorId));
 
         // Step 3: user selects a preferred slot
-        Availability availability = tutorRepository.findAvailabilityById(request.getAvailabilityId())
-                .orElseThrow(() -> new ResourceNotFoundException("Availability slot not found: " + request.getAvailabilityId()));
+        Availability availability = availabilityRepository.findByAvailabilityId(request.getAvailabilityId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Availability slot not found: " + request.getAvailabilityId()));
 
         // Exception 3a: missing or invalid session details (time, location, mode)
         if (availability.getStartTime() == null
@@ -59,16 +67,19 @@ public class SessionBookingService {
             throw new InvalidSessionDetailsException("Slot has invalid or incomplete details.");
         }
 
-        // Handle alt 2a: when availability supports both modes (HYBRID), we use student's preferred mode
+        // Handle alt 2a: when availability supports both modes (HYBRID), we use
+        // student's preferred mode
         SessionMode finalMode = availability.getMode();
         if (availability.getMode() == SessionMode.HYBRID && request.getPreferredMode() != null) {
             finalMode = request.getPreferredMode();
         }
 
         // Exception 4b: multiple booking / overlapping
-        // For MVP we simply check whether another session with the same tutor overlaps exactly in time.
+        // For MVP we simply check whether another session with the same tutor overlaps
+        // exactly in time.
         for (Session existing : sessionRepository.findByTutor(tutor)) {
-            boolean sameSlot = existing.getStartTime().equals(toDateTime(availability.getDayOfWeek(), availability.getStartTime()))
+            boolean sameSlot = existing.getStartTime()
+                    .equals(toDateTime(availability.getDayOfWeek(), availability.getStartTime()))
                     && existing.getEndTime().equals(toDateTime(availability.getDayOfWeek(), availability.getEndTime()));
             if (sameSlot) {
                 throw new SlotUnavailableException("Slot unavailable: already booked.");
@@ -84,7 +95,7 @@ public class SessionBookingService {
 
         // Step 5: create session record
         Session session = new Session();
-        session.setId(UUID.randomUUID().toString());
+        session.setSessionId(UUID.randomUUID().toString());
         session.setTutor(tutor);
         session.setStudent(student);
         session.setTitle("Tutoring session with " + tutor.getFirstName() + " " + tutor.getLastName());

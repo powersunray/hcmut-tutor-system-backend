@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   postgres:
@@ -12,8 +12,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./postgres_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
-      - ./postgres_dummy_data.sql:/docker-entrypoint-initdb.d/02-data.sql
+      - ./postgres_schema_jpa.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./postgres_dummy_data_jpa.sql:/docker-entrypoint-initdb.d/02-data.sql
     restart: unless-stopped
 
 volumes:

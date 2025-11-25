@@ -2,34 +2,17 @@ package hcmut.edu.vn.tutor_support_system.repository;
 
 import hcmut.edu.vn.tutor_support_system.entity.Session;
 import hcmut.edu.vn.tutor_support_system.entity.Tutor;
-import lombok.Getter;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-@Getter
-public class SessionRepository {
+public interface SessionRepository extends JpaRepository<Session, UUID> {
 
-    private final List<Session> sessions = new ArrayList<>();
+    List<Session> findByTutor(Tutor tutor);
 
-    public Session save(Session session) {
-        sessions.add(session);
-        return session;
-    }
-
-    public List<Session> findAll() {
-        return sessions;
-    }
-
-    public List<Session> findByTutor(Tutor tutor) {
-        return sessions.stream()
-                .filter(s -> s.getTutor() != null &&
-                        Objects.equals(s.getTutor().getTutorId(), tutor.getTutorId()))
-                .collect(Collectors.toList());
-    }
+    Optional<Session> findBySessionId(String sessionId);
 }
-

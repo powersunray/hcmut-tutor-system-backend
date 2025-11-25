@@ -7,6 +7,7 @@ import hcmut.edu.vn.tutor_support_system.entity.SessionMode;
 import hcmut.edu.vn.tutor_support_system.entity.Tutor;
 import hcmut.edu.vn.tutor_support_system.exception.ResourceNotFoundException;
 import hcmut.edu.vn.tutor_support_system.mapper.DtoMapper;
+import hcmut.edu.vn.tutor_support_system.repository.AvailabilityRepository;
 import hcmut.edu.vn.tutor_support_system.repository.TutorRepository;
 import hcmut.edu.vn.tutor_support_system.service.TutorSearchService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class TutorSearchController {
 
     private final TutorSearchService tutorSearchService;
     private final TutorRepository tutorRepository;
+    private final AvailabilityRepository availabilityRepository;
 
     @GetMapping("/search")
     public ResponseEntity<List<TutorSearchResultDto>> searchTutors(
@@ -30,8 +32,7 @@ public class TutorSearchController {
             @RequestParam(required = false) String campus,
             @RequestParam(required = false) SessionMode mode,
             @RequestParam(required = false) Double minRating,
-            @RequestParam(required = false, defaultValue = "false") boolean useAi
-    ) {
+            @RequestParam(required = false, defaultValue = "false") boolean useAi) {
         List<TutorSearchResultDto> results = tutorSearchService.searchTutors(
                 course, name, campus, mode, minRating, useAi);
         return ResponseEntity.ok(results);
@@ -40,12 +41,12 @@ public class TutorSearchController {
     // UC-4 step 6: return a DTO profile (no cycles)
     @GetMapping("/{tutorId}")
     public ResponseEntity<TutorProfileDto> getTutorProfile(@PathVariable String tutorId) {
-        Tutor t = tutorRepository.findById(tutorId)
+        Tutor t = tutorRepository.findByTutorId(tutorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tutor not found: " + tutorId));
 
         // Use the SAME ID getter your repo expects (tutorId vs id).
         // If your repo uses the string passed in the path, just reuse `tutorId`.
-        List<Availability> slots = tutorRepository.findAvailabilitiesByTutorId(tutorId);
+        List<Availability> slots = availabilityRepository.findByTutor(t);
 
         String fullName = (t.getFirstName() != null ? t.getFirstName() : "")
                 + (t.getLastName() != null ? " " + t.getLastName() : "");
@@ -61,8 +62,7 @@ public class TutorSearchController {
                 .availableSlots(
                         slots.stream()
                                 .map(DtoMapper::toAvailabilityDto)
-                                .toList()
-                )
+                                .toList())
                 .build();
 
         return ResponseEntity.ok(dto);

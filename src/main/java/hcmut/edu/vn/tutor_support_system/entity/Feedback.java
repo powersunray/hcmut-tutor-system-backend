@@ -1,25 +1,61 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
+@Entity
+@Table(name = "feedback")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Feedback {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = "feedback_id", unique = true, nullable = false, length = 100)
+    private String feedbackId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "session_id")
     private Session session;
 
-    private Student student;        // feedback giver
-    private int rating;             // 1–5
+    @Column(name = "rating")
+    private Integer rating;
+
+    @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
 
-    private List<String> tags = new ArrayList<>(); // "helpful", "clear", etc.
-
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Backward compatibility
+    @Transient
+    public String getId() {
+        return feedbackId;
+    }
+
+    public void setId(String id) {
+        this.feedbackId = id;
+    }
+
+    public int getRating() {
+        return rating != null ? rating : 0;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }

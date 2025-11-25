@@ -40,8 +40,8 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./postgres_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
-      - ./postgres_dummy_data.sql:/docker-entrypoint-initdb.d/02-data.sql
+      - ./postgres_schema_jpa.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./postgres_dummy_data_jpa.sql:/docker-entrypoint-initdb.d/02-data.sql
     restart: unless-stopped
 
 volumes:
@@ -80,10 +80,10 @@ sleep 10
 docker-compose exec -T postgres psql -U ${DB_USER} -d ${DB_NAME} -c "
 SELECT 'users' as table_name, COUNT(*) as count FROM users
 UNION ALL
-SELECT 'students' as table_name, COUNT(*) as count FROM students
-UNION ALL
 SELECT 'subjects' as table_name, COUNT(*) as count FROM subjects
 UNION ALL
-SELECT 'tutors' as table_name, COUNT(*) as count FROM tutors;
+SELECT 'availabilities' as table_name, COUNT(*) as count FROM availabilities
+UNION ALL
+SELECT 'tutoring_sessions' as table_name, COUNT(*) as count FROM tutoring_sessions;
 "
 
