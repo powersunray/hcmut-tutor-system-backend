@@ -12,14 +12,13 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 public class Staff extends User {
 
-    @Column(name = "staff_id", unique = true, length = 50)
-    private String staffId;
+  @Column(name = "staff_id", unique = true, length = 50)
+  private String staffId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "staff_role", length = 50)
-    private StaffRole staffRole;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "staff_role", length = 50)
+  private StaffRole staffRole;
 
-    @Column(name = "department")
-    private String department;
+  @Column(name = "department")
+  private String department;
 }
-

@@ -1,12 +1,11 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "enrollments")
@@ -16,35 +15,35 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Enrollment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id")
-    private Student student;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "student_id")
+  private Student student;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_id")
-    private Subject subject;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "subject_id")
+  private Subject subject;
 
-    @Column(name = "course_code", length = 20)
-    private String courseCode;
+  @Column(name = "course_code", length = 20)
+  private String courseCode;
 
-    @Column(name = "semester", length = 50)
-    private String semester;
+  @Column(name = "semester", length = 50)
+  private String semester;
 
-    @Column(name = "grade", length = 10)
-    private String grade;
+  @Column(name = "grade", length = 10)
+  private String grade;
 
-    @Column(name = "enrollment_status", length = 50)
-    private String enrollmentStatus;
+  @Column(name = "enrollment_status", length = 50)
+  private String enrollmentStatus;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 }

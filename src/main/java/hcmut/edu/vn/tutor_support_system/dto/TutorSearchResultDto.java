@@ -1,8 +1,7 @@
 package hcmut.edu.vn.tutor_support_system.dto;
 
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @Getter
 @Setter
@@ -11,15 +10,15 @@ import java.util.List;
 @Builder
 public class TutorSearchResultDto {
 
-    private String tutorId;
-    private String tutorName;
-    private String campus;
+  private String tutorId;
+  private String tutorName;
+  private String campus;
 
-    private List<String> courses;      // expertise areas
-    private double rating;
+  private List<String> courses; // expertise areas
+  private double rating;
 
-    private List<AvailabilityDto> availableSlots;
+  private List<AvailabilityDto> availableSlots;
 
-    // If AI is used, this contains a short “Why recommended” note.
-    private String whyRecommended;
+  // If AI is used, this contains a short “Why recommended” note.
+  private String whyRecommended;
 }
