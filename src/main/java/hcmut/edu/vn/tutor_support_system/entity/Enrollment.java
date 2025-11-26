@@ -1,25 +1,49 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
+@Entity
+@Table(name = "enrollments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Enrollment {
 
-    private String id;
-    private Student student;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    private String programName;       // e.g., "Computer Science"
-    private String major;
-    private String minor;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "student_id")
+  private Student student;
 
-    private List<String> courseCodes = new ArrayList<>(); // "CO2013", "CO3001", ...
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "subject_id")
+  private Subject subject;
 
-    private LocalDate declaredAt;
+  @Column(name = "course_code", length = 20)
+  private String courseCode;
+
+  @Column(name = "semester", length = 50)
+  private String semester;
+
+  @Column(name = "grade", length = 10)
+  private String grade;
+
+  @Column(name = "enrollment_status", length = 50)
+  private String enrollmentStatus;
+
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 }

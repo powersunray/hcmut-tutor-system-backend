@@ -11,31 +11,28 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "profiles")
+@Table(name = "subjects")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Profile {
+public class Subject {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Column(name = "profile_id", unique = true, nullable = false, length = 100)
-  private String profileId;
+  @Column(name = "code", unique = true, nullable = false, length = 20)
+  private String code;
 
-  @Column(name = "phone_number", length = 20)
-  private String phoneNumber;
+  @Column(name = "name", nullable = false)
+  private String name;
 
-  @Column(name = "campus", length = 100)
-  private String campus;
+  @Column(name = "credits")
+  private Integer credits;
 
-  @Column(name = "address", columnDefinition = "TEXT")
-  private String address;
-
-  @Column(name = "gender", length = 20)
-  private String gender;
+  @Column(name = "description", columnDefinition = "TEXT")
+  private String description;
 
   @CreationTimestamp
   @Column(name = "created_at", updatable = false)

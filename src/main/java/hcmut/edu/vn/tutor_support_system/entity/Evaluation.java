@@ -1,30 +1,56 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-
+@Entity
+@Table(name = "evaluations")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Evaluation {
 
-    private String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    private Student student;
-    private Session session;
+  @Column(name = "evaluation_id", unique = true, nullable = false, length = 100)
+  private String evaluationId;
 
-    private User evaluator;             // tutor or staff
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "session_id")
+  private Session session;
 
-    private String progressSummary;
-    private String achievements;
-    private String concerns;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "evaluator_id")
+  private User evaluator;
 
-    private String overallStatus;       // "On track", "Needs support", ...
+  @Column(name = "content", columnDefinition = "TEXT")
+  private String content;
 
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
+
+  // Backward compatibility
+  @Transient
+  public String getId() {
+    return evaluationId;
+  }
+
+  public void setId(String id) {
+    this.evaluationId = id;
+  }
 }
