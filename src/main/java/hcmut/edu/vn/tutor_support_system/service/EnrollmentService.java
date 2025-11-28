@@ -29,6 +29,12 @@ public class EnrollmentService {
   public List<EnrollmentDto> getEnrollmentsByStudentId(String studentId) {
     ValidationUtil.validateNotEmpty(studentId, "Student ID");
 
+    // Verify student exists
+    studentRepository
+        .findByStudentId(studentId)
+        .orElseThrow(
+            () -> new ResourceNotFoundException("Student not found with id: " + studentId));
+
     List<Enrollment> enrollments = enrollmentRepository.findByStudentId(studentId);
     return enrollments.stream().map(DtoMapper::toEnrollmentDto).collect(Collectors.toList());
   }
@@ -38,6 +44,12 @@ public class EnrollmentService {
       String studentId, String semester) {
     ValidationUtil.validateNotEmpty(studentId, "Student ID");
     ValidationUtil.validateSemester(semester);
+
+    // Verify student exists
+    studentRepository
+        .findByStudentId(studentId)
+        .orElseThrow(
+            () -> new ResourceNotFoundException("Student not found with id: " + studentId));
 
     List<Enrollment> enrollments =
         enrollmentRepository.findByStudentIdAndSemester(studentId, semester);

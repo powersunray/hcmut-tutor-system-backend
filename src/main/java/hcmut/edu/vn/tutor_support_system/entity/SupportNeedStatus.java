@@ -6,5 +6,6 @@ public enum SupportNeedStatus {
   IN_PROGRESS,
   RESOLVED,
   FULFILLED,
-  CLOSED
+  CLOSED,
+  CANCELLED
 }
