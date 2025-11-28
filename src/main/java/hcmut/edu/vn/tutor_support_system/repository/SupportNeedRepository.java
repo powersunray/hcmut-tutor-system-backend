@@ -5,6 +5,7 @@ import hcmut.edu.vn.tutor_support_system.entity.SupportNeed;
 import hcmut.edu.vn.tutor_support_system.entity.SupportNeedStatus;
 import hcmut.edu.vn.tutor_support_system.entity.SupportType;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,24 +15,37 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SupportNeedRepository extends JpaRepository<SupportNeed, UUID> {
 
+  @Query("SELECT s FROM SupportNeed s " + "LEFT JOIN FETCH s.student " + "WHERE s.id = :id")
+  Optional<SupportNeed> findByIdWithStudent(@Param("id") UUID id);
+
   List<SupportNeed> findByStudent(Student student);
 
-  @Query("SELECT s FROM SupportNeed s WHERE s.student.studentId = :studentId")
+  @Query(
+      "SELECT s FROM SupportNeed s "
+          + "LEFT JOIN FETCH s.student "
+          + "WHERE s.student.studentId = :studentId")
   List<SupportNeed> findByStudentId(@Param("studentId") String studentId);
 
-  @Query("SELECT s FROM SupportNeed s WHERE s.supportType = :supportType")
+  @Query(
+      "SELECT s FROM SupportNeed s "
+          + "LEFT JOIN FETCH s.student "
+          + "WHERE s.supportType = :supportType")
   List<SupportNeed> findBySupportType(@Param("supportType") SupportType supportType);
 
-  @Query("SELECT s FROM SupportNeed s WHERE s.status = :status")
+  @Query("SELECT s FROM SupportNeed s " + "LEFT JOIN FETCH s.student " + "WHERE s.status = :status")
   List<SupportNeed> findByStatus(@Param("status") SupportNeedStatus status);
 
   @Query(
-      "SELECT s FROM SupportNeed s WHERE s.student.studentId = :studentId AND s.supportType = :supportType")
+      "SELECT s FROM SupportNeed s "
+          + "LEFT JOIN FETCH s.student "
+          + "WHERE s.student.studentId = :studentId AND s.supportType = :supportType")
   List<SupportNeed> findByStudentIdAndSupportType(
       @Param("studentId") String studentId, @Param("supportType") SupportType supportType);
 
   @Query(
-      "SELECT s FROM SupportNeed s WHERE s.student.studentId = :studentId AND s.status = :status")
+      "SELECT s FROM SupportNeed s "
+          + "LEFT JOIN FETCH s.student "
+          + "WHERE s.student.studentId = :studentId AND s.status = :status")
   List<SupportNeed> findByStudentIdAndStatus(
       @Param("studentId") String studentId, @Param("status") SupportNeedStatus status);
 

@@ -50,7 +50,7 @@ public class EnrollmentService {
 
     Enrollment enrollment =
         enrollmentRepository
-            .findById(enrollmentId)
+            .findByIdWithRelations(enrollmentId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
@@ -105,7 +105,7 @@ public class EnrollmentService {
 
     Enrollment enrollment =
         enrollmentRepository
-            .findById(enrollmentId)
+            .findByIdWithRelations(enrollmentId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
@@ -122,7 +122,7 @@ public class EnrollmentService {
 
     Enrollment enrollment =
         enrollmentRepository
-            .findById(enrollmentId)
+            .findByIdWithRelations(enrollmentId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
@@ -138,7 +138,7 @@ public class EnrollmentService {
 
     Enrollment enrollment =
         enrollmentRepository
-            .findById(enrollmentId)
+            .findByIdWithRelations(enrollmentId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));

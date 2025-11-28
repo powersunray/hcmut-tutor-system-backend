@@ -54,7 +54,7 @@ public class SupportNeedService {
 
     SupportNeed supportNeed =
         supportNeedRepository
-            .findById(supportNeedId)
+            .findByIdWithStudent(supportNeedId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException(
@@ -91,7 +91,7 @@ public class SupportNeedService {
 
     SupportNeed supportNeed =
         supportNeedRepository
-            .findById(supportNeedId)
+            .findByIdWithStudent(supportNeedId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException(
@@ -109,7 +109,7 @@ public class SupportNeedService {
 
     SupportNeed supportNeed =
         supportNeedRepository
-            .findById(supportNeedId)
+            .findByIdWithStudent(supportNeedId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException(
@@ -126,7 +126,7 @@ public class SupportNeedService {
 
     SupportNeed supportNeed =
         supportNeedRepository
-            .findById(supportNeedId)
+            .findByIdWithStudent(supportNeedId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException(
