@@ -1,6 +1,7 @@
 package hcmut.edu.vn.tutor_support_system.controller;
 
 import hcmut.edu.vn.tutor_support_system.dto.SupportNeedDto;
+import hcmut.edu.vn.tutor_support_system.entity.SupportNeedStatus;
 import hcmut.edu.vn.tutor_support_system.entity.SupportType;
 import hcmut.edu.vn.tutor_support_system.service.SupportNeedService;
 import java.util.List;
@@ -49,7 +50,7 @@ public class SupportNeedController {
 
   @PutMapping("/support-needs/{supportNeedId}/status")
   public ResponseEntity<SupportNeedDto> updateSupportNeedStatus(
-      @PathVariable UUID supportNeedId, @RequestParam String status) {
+      @PathVariable UUID supportNeedId, @RequestParam SupportNeedStatus status) {
     SupportNeedDto supportNeed = supportNeedService.updateSupportNeedStatus(supportNeedId, status);
     return ResponseEntity.ok(supportNeed);
   }
@@ -71,12 +72,12 @@ public class SupportNeedController {
   @GetMapping("/support-needs")
   public ResponseEntity<List<SupportNeedDto>> getSupportNeeds(
       @RequestParam(required = false) SupportType type,
-      @RequestParam(required = false) String status) {
+      @RequestParam(required = false) SupportNeedStatus status) {
     List<SupportNeedDto> supportNeeds;
 
     if (type != null) {
       supportNeeds = supportNeedService.getSupportNeedsByType(type);
-    } else if (status != null && !status.isEmpty()) {
+    } else if (status != null) {
       supportNeeds = supportNeedService.getSupportNeedsByStatus(status);
     } else {
       return ResponseEntity.badRequest().build();
@@ -87,7 +88,7 @@ public class SupportNeedController {
 
   @GetMapping("/support-needs/statistics")
   public ResponseEntity<Long> getSupportNeedsCount(
-      @RequestParam SupportType type, @RequestParam String status) {
+      @RequestParam SupportType type, @RequestParam SupportNeedStatus status) {
     Long count = supportNeedService.countSupportNeedsByTypeAndStatus(type, status);
     return ResponseEntity.ok(count);
   }

@@ -23,7 +23,7 @@ public class StaffService {
 
   @Transactional(readOnly = true)
   public List<StaffDto> getAllStaff() {
-    List<Staff> staffList = staffRepository.findAll();
+    List<Staff> staffList = staffRepository.findAllWithProfile();
     return staffList.stream().map(DtoMapper::toStaffDto).collect(Collectors.toList());
   }
 
@@ -33,7 +33,7 @@ public class StaffService {
 
     Staff staff =
         staffRepository
-            .findById(id)
+            .findByIdWithProfile(id)
             .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
     return DtoMapper.toStaffDto(staff);
   }
@@ -110,7 +110,7 @@ public class StaffService {
 
     Staff staff =
         staffRepository
-            .findById(id)
+            .findByIdWithProfile(id)
             .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
 
     if (staffDto.getFirstName() != null && !staffDto.getFirstName().isEmpty()) {
@@ -144,7 +144,7 @@ public class StaffService {
 
     Staff staff =
         staffRepository
-            .findById(id)
+            .findByIdWithProfile(id)
             .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
 
     staffRepository.delete(staff);

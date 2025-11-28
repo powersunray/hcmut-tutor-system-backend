@@ -1,5 +1,6 @@
 package hcmut.edu.vn.tutor_support_system.dto;
 
+import hcmut.edu.vn.tutor_support_system.entity.EnrollmentStatus;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,7 @@ public class EnrollmentDto {
   private String courseCode;
   private String semester;
   private String grade;
-  private String enrollmentStatus;
+  private EnrollmentStatus enrollmentStatus;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

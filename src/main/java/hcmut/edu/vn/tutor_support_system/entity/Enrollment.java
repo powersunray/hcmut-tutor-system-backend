@@ -36,8 +36,9 @@ public class Enrollment {
   @Column(name = "grade", length = 10)
   private String grade;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "enrollment_status", length = 50)
-  private String enrollmentStatus;
+  private EnrollmentStatus enrollmentStatus;
 
   @CreationTimestamp
   @Column(name = "created_at", updatable = false)

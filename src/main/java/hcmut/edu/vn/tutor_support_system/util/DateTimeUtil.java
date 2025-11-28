@@ -107,39 +107,47 @@ public final class DateTimeUtil {
   public static LocalDate getStartOfSemester(String semester) {
     if (semester == null || semester.length() != 3) return null;
 
-    int yearLastTwoDigits = Integer.parseInt(semester.substring(0, 2));
-    int semesterNumber = Integer.parseInt(semester.substring(2, 3));
+    try {
+      int yearLastTwoDigits = Integer.parseInt(semester.substring(0, 2));
+      int semesterNumber = Integer.parseInt(semester.substring(2, 3));
 
-    int fullYear = 2000 + yearLastTwoDigits;
-    if (semesterNumber == 2 || semesterNumber == 3) {
-      fullYear++;
+      int fullYear = 2000 + yearLastTwoDigits;
+      if (semesterNumber == 2 || semesterNumber == 3) {
+        fullYear++;
+      }
+
+      return switch (semesterNumber) {
+        case 1 -> LocalDate.of(fullYear - 1, 9, 1);
+        case 2 -> LocalDate.of(fullYear, 1, 1);
+        case 3 -> LocalDate.of(fullYear, 5, 1);
+        default -> null;
+      };
+    } catch (NumberFormatException e) {
+      return null;
     }
-
-    return switch (semesterNumber) {
-      case 1 -> LocalDate.of(fullYear - 1, 9, 1);
-      case 2 -> LocalDate.of(fullYear, 1, 1);
-      case 3 -> LocalDate.of(fullYear, 5, 1);
-      default -> null;
-    };
   }
 
   public static LocalDate getEndOfSemester(String semester) {
     if (semester == null || semester.length() != 3) return null;
 
-    int yearLastTwoDigits = Integer.parseInt(semester.substring(0, 2));
-    int semesterNumber = Integer.parseInt(semester.substring(2, 3));
+    try {
+      int yearLastTwoDigits = Integer.parseInt(semester.substring(0, 2));
+      int semesterNumber = Integer.parseInt(semester.substring(2, 3));
 
-    int fullYear = 2000 + yearLastTwoDigits;
-    if (semesterNumber == 2 || semesterNumber == 3) {
-      fullYear++;
+      int fullYear = 2000 + yearLastTwoDigits;
+      if (semesterNumber == 2 || semesterNumber == 3) {
+        fullYear++;
+      }
+
+      return switch (semesterNumber) {
+        case 1 -> LocalDate.of(fullYear, 12, 31);
+        case 2 -> LocalDate.of(fullYear, 4, 30);
+        case 3 -> LocalDate.of(fullYear, 8, 31);
+        default -> null;
+      };
+    } catch (NumberFormatException e) {
+      return null;
     }
-
-    return switch (semesterNumber) {
-      case 1 -> LocalDate.of(fullYear, 12, 31);
-      case 2 -> LocalDate.of(fullYear, 4, 30);
-      case 3 -> LocalDate.of(fullYear, 8, 31);
-      default -> null;
-    };
   }
 
   public static boolean isWithinSemester(LocalDate date, String semester) {

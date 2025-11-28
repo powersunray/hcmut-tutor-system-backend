@@ -2,6 +2,7 @@ package hcmut.edu.vn.tutor_support_system.service;
 
 import hcmut.edu.vn.tutor_support_system.dto.EnrollmentDto;
 import hcmut.edu.vn.tutor_support_system.entity.Enrollment;
+import hcmut.edu.vn.tutor_support_system.entity.EnrollmentStatus;
 import hcmut.edu.vn.tutor_support_system.entity.Student;
 import hcmut.edu.vn.tutor_support_system.exception.DuplicateEnrollmentException;
 import hcmut.edu.vn.tutor_support_system.exception.EnrollmentException;
@@ -49,7 +50,7 @@ public class EnrollmentService {
 
     Enrollment enrollment =
         enrollmentRepository
-            .findById(enrollmentId)
+            .findByIdWithRelations(enrollmentId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
@@ -91,20 +92,20 @@ public class EnrollmentService {
     enrollment.setStudent(student);
     enrollment.setCourseCode(subjectCode);
     enrollment.setSemester(semester);
-    enrollment.setEnrollmentStatus("ACTIVE");
+    enrollment.setEnrollmentStatus(EnrollmentStatus.ACTIVE);
 
     Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
     return DtoMapper.toEnrollmentDto(savedEnrollment);
   }
 
   @Transactional
-  public EnrollmentDto updateEnrollmentStatus(UUID enrollmentId, String status) {
+  public EnrollmentDto updateEnrollmentStatus(UUID enrollmentId, EnrollmentStatus status) {
     ValidationUtil.validateNotNull(enrollmentId, "Enrollment ID");
-    ValidationUtil.validateNotEmpty(status, "Status");
+    ValidationUtil.validateNotNull(status, "Status");
 
     Enrollment enrollment =
         enrollmentRepository
-            .findById(enrollmentId)
+            .findByIdWithRelations(enrollmentId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
@@ -121,7 +122,7 @@ public class EnrollmentService {
 
     Enrollment enrollment =
         enrollmentRepository
-            .findById(enrollmentId)
+            .findByIdWithRelations(enrollmentId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
@@ -137,7 +138,7 @@ public class EnrollmentService {
 
     Enrollment enrollment =
         enrollmentRepository
-            .findById(enrollmentId)
+            .findByIdWithRelations(enrollmentId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Enrollment not found with id: " + enrollmentId));
@@ -154,8 +155,8 @@ public class EnrollmentService {
   }
 
   @Transactional(readOnly = true)
-  public List<EnrollmentDto> getEnrollmentsByStatus(String status) {
-    ValidationUtil.validateNotEmpty(status, "Status");
+  public List<EnrollmentDto> getEnrollmentsByStatus(EnrollmentStatus status) {
+    ValidationUtil.validateNotNull(status, "Status");
 
     List<Enrollment> enrollments = enrollmentRepository.findByEnrollmentStatus(status);
     return enrollments.stream().map(DtoMapper::toEnrollmentDto).collect(Collectors.toList());

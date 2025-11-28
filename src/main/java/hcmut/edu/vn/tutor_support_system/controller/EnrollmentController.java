@@ -1,6 +1,7 @@
 package hcmut.edu.vn.tutor_support_system.controller;
 
 import hcmut.edu.vn.tutor_support_system.dto.EnrollmentDto;
+import hcmut.edu.vn.tutor_support_system.entity.EnrollmentStatus;
 import hcmut.edu.vn.tutor_support_system.service.EnrollmentService;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class EnrollmentController {
 
   @PutMapping("/enrollments/{enrollmentId}/status")
   public ResponseEntity<EnrollmentDto> updateEnrollmentStatus(
-      @PathVariable UUID enrollmentId, @RequestParam String status) {
+      @PathVariable UUID enrollmentId, @RequestParam EnrollmentStatus status) {
     EnrollmentDto enrollment = enrollmentService.updateEnrollmentStatus(enrollmentId, status);
     return ResponseEntity.ok(enrollment);
   }
@@ -68,12 +69,12 @@ public class EnrollmentController {
   @GetMapping("/enrollments")
   public ResponseEntity<List<EnrollmentDto>> getEnrollments(
       @RequestParam(required = false) String semester,
-      @RequestParam(required = false) String status) {
+      @RequestParam(required = false) EnrollmentStatus status) {
     List<EnrollmentDto> enrollments;
 
     if (semester != null && !semester.isEmpty()) {
       enrollments = enrollmentService.getEnrollmentsBySemester(semester);
-    } else if (status != null && !status.isEmpty()) {
+    } else if (status != null) {
       enrollments = enrollmentService.getEnrollmentsByStatus(status);
     } else {
       return ResponseEntity.badRequest().build();
