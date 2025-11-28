@@ -3,6 +3,10 @@ package hcmut.edu.vn.tutor_support_system.exception;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -128,16 +132,23 @@ public class GlobalExceptionHandler {
       message =
           String.format(
               "Invalid value '%s' for parameter '%s'. Allowed values are: %s",
-              ex.getValue(), ex.getName(), java.util.Arrays.toString(ex.getRequiredType().getEnumConstants()));
+              ex.getValue(),
+              ex.getName(),
+              java.util.Arrays.toString(ex.getRequiredType().getEnumConstants()));
     } else {
       message =
           String.format(
               "Invalid value '%s' for parameter '%s'. Expected type: %s",
-              ex.getValue(), ex.getName(), ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown");
+              ex.getValue(),
+              ex.getName(),
+              ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown");
     }
     ErrorResponse errorResponse =
         new ErrorResponse(
-            HttpStatus.BAD_REQUEST.value(), message, LocalDateTime.now(), request.getDescription(false));
+            HttpStatus.BAD_REQUEST.value(),
+            message,
+            LocalDateTime.now(),
+            request.getDescription(false));
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 
@@ -152,49 +163,14 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
   public static class ErrorResponse {
     private int status;
     private String message;
     private LocalDateTime timestamp;
     private String path;
-
-    public ErrorResponse(int status, String message, LocalDateTime timestamp, String path) {
-      this.status = status;
-      this.message = message;
-      this.timestamp = timestamp;
-      this.path = path;
-    }
-
-    public int getStatus() {
-      return status;
-    }
-
-    public void setStatus(int status) {
-      this.status = status;
-    }
-
-    public String getMessage() {
-      return message;
-    }
-
-    public void setMessage(String message) {
-      this.message = message;
-    }
-
-    public LocalDateTime getTimestamp() {
-      return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-      this.timestamp = timestamp;
-    }
-
-    public String getPath() {
-      return path;
-    }
-
-    public void setPath(String path) {
-      this.path = path;
-    }
   }
 }

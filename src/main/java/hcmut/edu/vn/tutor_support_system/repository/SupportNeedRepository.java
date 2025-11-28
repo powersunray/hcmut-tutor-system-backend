@@ -2,6 +2,7 @@ package hcmut.edu.vn.tutor_support_system.repository;
 
 import hcmut.edu.vn.tutor_support_system.entity.Student;
 import hcmut.edu.vn.tutor_support_system.entity.SupportNeed;
+import hcmut.edu.vn.tutor_support_system.entity.SupportNeedStatus;
 import hcmut.edu.vn.tutor_support_system.entity.SupportType;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public interface SupportNeedRepository extends JpaRepository<SupportNeed, UUID> 
   List<SupportNeed> findBySupportType(@Param("supportType") SupportType supportType);
 
   @Query("SELECT s FROM SupportNeed s WHERE s.status = :status")
-  List<SupportNeed> findByStatus(@Param("status") String status);
+  List<SupportNeed> findByStatus(@Param("status") SupportNeedStatus status);
 
   @Query(
       "SELECT s FROM SupportNeed s WHERE s.student.studentId = :studentId AND s.supportType = :supportType")
@@ -32,10 +33,10 @@ public interface SupportNeedRepository extends JpaRepository<SupportNeed, UUID> 
   @Query(
       "SELECT s FROM SupportNeed s WHERE s.student.studentId = :studentId AND s.status = :status")
   List<SupportNeed> findByStudentIdAndStatus(
-      @Param("studentId") String studentId, @Param("status") String status);
+      @Param("studentId") String studentId, @Param("status") SupportNeedStatus status);
 
   @Query(
       "SELECT COUNT(s) FROM SupportNeed s WHERE s.supportType = :supportType AND s.status = :status")
   Long countBySupportTypeAndStatus(
-      @Param("supportType") SupportType supportType, @Param("status") String status);
+      @Param("supportType") SupportType supportType, @Param("status") SupportNeedStatus status);
 }

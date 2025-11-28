@@ -1,6 +1,7 @@
 package hcmut.edu.vn.tutor_support_system.repository;
 
 import hcmut.edu.vn.tutor_support_system.entity.Enrollment;
+import hcmut.edu.vn.tutor_support_system.entity.EnrollmentStatus;
 import hcmut.edu.vn.tutor_support_system.entity.Student;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, UUID> {
       @Param("semester") String semester);
 
   @Query("SELECT e FROM Enrollment e WHERE e.enrollmentStatus = :status")
-  List<Enrollment> findByEnrollmentStatus(@Param("status") String status);
+  List<Enrollment> findByEnrollmentStatus(@Param("status") EnrollmentStatus status);
 
   @Query("SELECT e FROM Enrollment e WHERE e.semester = :semester")
   List<Enrollment> findBySemester(@Param("semester") String semester);

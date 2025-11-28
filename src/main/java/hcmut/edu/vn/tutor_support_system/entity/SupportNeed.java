@@ -33,8 +33,9 @@ public class SupportNeed {
   @Column(name = "description", columnDefinition = "TEXT")
   private String description;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "status", length = 50)
-  private String status;
+  private SupportNeedStatus status;
 
   @CreationTimestamp
   @Column(name = "created_at", updatable = false)
@@ -56,6 +57,6 @@ public class SupportNeed {
 
   @Transient
   public boolean isActive() {
-    return "PENDING".equals(status) || "FULFILLED".equals(status);
+    return SupportNeedStatus.PENDING.equals(status) || SupportNeedStatus.FULFILLED.equals(status);
   }
 }

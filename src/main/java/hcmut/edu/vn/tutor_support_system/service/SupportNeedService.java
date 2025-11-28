@@ -3,6 +3,7 @@ package hcmut.edu.vn.tutor_support_system.service;
 import hcmut.edu.vn.tutor_support_system.dto.SupportNeedDto;
 import hcmut.edu.vn.tutor_support_system.entity.Student;
 import hcmut.edu.vn.tutor_support_system.entity.SupportNeed;
+import hcmut.edu.vn.tutor_support_system.entity.SupportNeedStatus;
 import hcmut.edu.vn.tutor_support_system.entity.SupportType;
 import hcmut.edu.vn.tutor_support_system.exception.ResourceNotFoundException;
 import hcmut.edu.vn.tutor_support_system.mapper.DtoMapper;
@@ -40,8 +41,8 @@ public class SupportNeedService {
   }
 
   @Transactional(readOnly = true)
-  public List<SupportNeedDto> getSupportNeedsByStatus(String status) {
-    ValidationUtil.validateNotEmpty(status, "Status");
+  public List<SupportNeedDto> getSupportNeedsByStatus(SupportNeedStatus status) {
+    ValidationUtil.validateNotNull(status, "Status");
 
     List<SupportNeed> supportNeeds = supportNeedRepository.findByStatus(status);
     return supportNeeds.stream().map(DtoMapper::toSupportNeedDto).collect(Collectors.toList());
@@ -77,16 +78,16 @@ public class SupportNeedService {
     supportNeed.setStudent(student);
     supportNeed.setSupportType(supportType);
     supportNeed.setDescription(description);
-    supportNeed.setStatus("PENDING");
+    supportNeed.setStatus(SupportNeedStatus.PENDING);
 
     SupportNeed savedSupportNeed = supportNeedRepository.save(supportNeed);
     return DtoMapper.toSupportNeedDto(savedSupportNeed);
   }
 
   @Transactional
-  public SupportNeedDto updateSupportNeedStatus(UUID supportNeedId, String status) {
+  public SupportNeedDto updateSupportNeedStatus(UUID supportNeedId, SupportNeedStatus status) {
     ValidationUtil.validateNotNull(supportNeedId, "Support need ID");
-    ValidationUtil.validateNotEmpty(status, "Status");
+    ValidationUtil.validateNotNull(status, "Status");
 
     SupportNeed supportNeed =
         supportNeedRepository
@@ -146,9 +147,9 @@ public class SupportNeedService {
   }
 
   @Transactional(readOnly = true)
-  public Long countSupportNeedsByTypeAndStatus(SupportType supportType, String status) {
+  public Long countSupportNeedsByTypeAndStatus(SupportType supportType, SupportNeedStatus status) {
     ValidationUtil.validateNotNull(supportType, "Support type");
-    ValidationUtil.validateNotEmpty(status, "Status");
+    ValidationUtil.validateNotNull(status, "Status");
 
     return supportNeedRepository.countBySupportTypeAndStatus(supportType, status);
   }
