@@ -1,16 +1,17 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tutoring_sessions")
@@ -81,7 +82,12 @@ public class Session {
     return sessionId;
   }
 
-  public void setId(String id) {
-    this.sessionId = id;
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  // Optional: If you need to accept String, convert it first
+  public void setIdFromString(String idString) {
+    this.id = UUID.fromString(idString);
   }
 }
