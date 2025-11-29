@@ -1,0 +1,85 @@
+### ============================================
+### TUTOR SUPPORT SYSTEM - API TEST REQUESTS
+### ============================================
+
+#@baseUrl = http://localhost:8080/api
+#@tutorId = aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+#@studentId = cccccccc-cccc-cccc-cccc-cccccccccccc
+#@availabilityId = eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee
+#@sessionId = 14141414-1414-1414-1414-141414141414
+@baseUrl = http://localhost:8080/api
+@tutorId = tutor-1
+@studentId = 2110001
+@availabilityId = avail-tutor1-mon
+@sessionId = session-1
+
+
+### ============================================
+### 1. GET AVAILABLE SLOTS FOR TUTOR
+### ============================================
+### Description: Fetch all published availability slots for a tutor
+### Expected: 200 OK with list of AvailabilityDto
+
+GET {{baseUrl}}/tutors/{{tutorId}}/slots
+
+### ============================================
+### 2. BOOK A SESSION
+### ============================================
+### Description: Student books a session by selecting an availability slot
+### Expected: 200 OK with SessionResponseDto
+
+POST {{baseUrl}}/tutors/{{tutorId}}/sessions
+Content-Type: application/json
+
+{
+  "studentId": "{{studentId}}",
+  "availabilityId": "{{availabilityId}}",
+  "preferredMode": "ONLINE"
+}
+
+### ============================================
+### 3. GET SESSION BY ID
+### ============================================
+### Description: Retrieve a specific session details
+### Expected: 200 OK with SessionResponseDto
+
+GET {{baseUrl}}/sessions/{{sessionId}}
+
+### ============================================
+### 4. UPDATE SESSION STATUS
+### ============================================
+### Description: Update session status (PENDING → CONFIRMED, COMPLETED, CANCELLED, etc.)
+### Expected: 200 OK with updated SessionResponseDto
+
+PUT {{baseUrl}}/sessions/{{sessionId}}/status?status=CONFIRMED
+Content-Type: application/json
+
+### ============================================
+### 5. UPDATE SESSION DETAILS
+### ============================================
+### Description: Update session mode, location, or notes
+### Expected: 200 OK with updated SessionResponseDto
+
+PUT {{baseUrl}}/sessions/{{sessionId}}
+Content-Type: application/json
+
+{
+  "mode": "HYBRID",
+  "locationOrLink": "Room C6-403 & https://zoom.us/meeting"
+}
+
+### ============================================
+### 6. GET SESSIONS BY TUTOR
+### ============================================
+### Description: List all sessions for a specific tutor
+### Expected: 200 OK with list of SessionResponseDto
+
+GET {{baseUrl}}/sessions/tutor/{{tutorId}}
+
+### ============================================
+### 7. GET SESSIONS BY STUDENT
+### ============================================
+### Description: List all sessions for a specific student
+### Expected: 200 OK with list of SessionResponseDto
+
+GET {{baseUrl}}/sessions/student/{{studentId}}
