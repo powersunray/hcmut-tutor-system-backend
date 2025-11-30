@@ -14,7 +14,7 @@ public class TutorSearchResultDto {
   private String tutorName;
   private String campus;
 
-  private List<String> courses; // expertise areas
+  private List<String> expertiseAreas;
   private double rating;
 
   private List<AvailabilityDto> availableSlots;
