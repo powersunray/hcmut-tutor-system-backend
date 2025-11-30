@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SessionBookingRequest {
 
-    private String studentId;
+    private Long studentId;
     private String availabilityId;
 
     // Only needed if a slot supports both modes (UC-5 alt 2a)

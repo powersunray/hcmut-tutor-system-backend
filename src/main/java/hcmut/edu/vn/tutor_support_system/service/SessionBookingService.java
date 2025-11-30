@@ -41,7 +41,7 @@ public class SessionBookingService {
     public SessionResponseDto bookSession(String tutorId, SessionBookingRequest request) {
 
         // PRE-2/3: student profile authenticated + selected tutor (authentication via SSO is outside this service)
-        Student student = studentRepository.findById(request.getStudentId())
+        Student student = studentRepository.findByStudentId(request.getStudentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found: " + request.getStudentId()));
 
         Tutor tutor = tutorRepository.findById(tutorId)
@@ -126,14 +126,15 @@ public class SessionBookingService {
     }
 
     private SessionResponseDto toSessionResponseDto(Session session) {
+        String tutorName = session.getTutor().getFirstName() + " " + session.getTutor().getLastName();
+        String studentName = session.getStudent().getFirstName() + " " + session.getStudent().getLastName();
+
         return SessionResponseDto.builder()
                 .sessionId(session.getId())
                 .tutorId(session.getTutor().getTutorId())
-                .tutorName(session.getTutor().getFirstName())
-                .tutorName(session.getTutor().getLastName())
+                .tutorName(tutorName)
                 .studentId(session.getStudent().getStudentId())
-                .studentName(session.getStudent().getFirstName())
-                .studentName(session.getStudent().getLastName())
+                .studentName(studentName)
                 .startTime(session.getStartTime())
                 .endTime(session.getEndTime())
                 .mode(session.getMode())
