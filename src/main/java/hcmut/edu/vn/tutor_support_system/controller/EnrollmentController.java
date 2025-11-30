@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/enrollments")
+@RequestMapping("/api/enrollments")
 @RequiredArgsConstructor
 public class EnrollmentController {
 
