@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class EnrollmentRepository {
 
     private final StudentRepository studentRepository;
-    private final List<Enrollment> enrollments = new ArrayList<>();
+    private final List<Enrollment> enrollments = java.util.Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong idSequence = new AtomicLong(1);
 
     @PostConstruct

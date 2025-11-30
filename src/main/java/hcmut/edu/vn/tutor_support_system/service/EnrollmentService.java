@@ -29,7 +29,8 @@ public class EnrollmentService {
         Student student = studentRepository.findByStudentId(request.studentId())
                 .orElseThrow(() -> new InvalidEnrollmentException("Student not found: " + request.studentId()));
 
-        boolean duplicate = enrollmentRepository.findByStudentIdAndSemester(student.getId(), request.semester())
+        // Use the external studentId for repository lookups (repositories compare against Student.studentId)
+        boolean duplicate = enrollmentRepository.findByStudentIdAndSemester(student.getStudentId(), request.semester())
                 .stream()
                 .anyMatch(e -> e.getCourseCode() != null && e.getCourseCode().equalsIgnoreCase(request.courseCode()));
         if (duplicate) {
@@ -38,7 +39,9 @@ public class EnrollmentService {
 
         if (request.courseCode() != null) {
             subjectRepository.findByCode(request.courseCode())
-                    .orElseThrow(() -> new InvalidEnrollmentException("Subject not found: " + request.courseCode()));
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.NOT_FOUND,
+                    "Subject not found: " + request.courseCode()));
         }
 
         Enrollment enrollment = Enrollment.builder()

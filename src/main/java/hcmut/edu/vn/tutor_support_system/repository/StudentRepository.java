@@ -2,6 +2,7 @@ package hcmut.edu.vn.tutor_support_system.repository;
 
 import hcmut.edu.vn.tutor_support_system.entity.Student;
 import hcmut.edu.vn.tutor_support_system.entity.UserRole;
+import hcmut.edu.vn.tutor_support_system.entity.Profile;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 

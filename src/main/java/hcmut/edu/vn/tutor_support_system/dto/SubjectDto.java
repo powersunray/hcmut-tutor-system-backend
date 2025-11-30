@@ -11,7 +11,7 @@ public record SubjectDto(
         Long id,
         @NotBlank @Size(max = 20) String code,
         @NotBlank @Size(max = 150) String name,
-        String description,
+        @Size(max = 255) String description,
         @NotNull @Min(0) Integer credits,
         List<String> prerequisites
 ) {

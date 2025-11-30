@@ -2,9 +2,10 @@ package hcmut.edu.vn.tutor_support_system.service;
 
 import hcmut.edu.vn.tutor_support_system.dto.SubjectDto;
 import hcmut.edu.vn.tutor_support_system.entity.Subject;
-import hcmut.edu.vn.tutor_support_system.exception.InvalidEnrollmentException;
 import hcmut.edu.vn.tutor_support_system.repository.EnrollmentRepository;
 import hcmut.edu.vn.tutor_support_system.repository.SubjectRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,16 +20,22 @@ public class SubjectService {
     private final EnrollmentRepository enrollmentRepository;
 
     public SubjectDto createSubject(SubjectDto dto) {
-        subjectRepository.findByCode(dto.code()).ifPresent(s -> {
-            throw new InvalidEnrollmentException("Subject code already exists");
+        String raw = dto.code() == null ? null : dto.code().trim();
+        if (raw == null || raw.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subject code must be provided");
+        }
+        String code = raw.toUpperCase();
+        subjectRepository.findByCode(code).ifPresent(s -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Subject code already exists");
         });
         Subject subject = toEntity(dto);
+        subject.setCode(code);
         return toDto(subjectRepository.save(subject));
     }
 
     public SubjectDto updateSubject(Long id, SubjectDto dto) {
         Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new InvalidEnrollmentException("Subject not found: " + id));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject not found: " + id));
         subject.setName(dto.name());
         subject.setDescription(dto.description());
         subject.setCredits(dto.credits());
@@ -38,7 +45,7 @@ public class SubjectService {
 
     public void deleteSubject(Long id) {
         Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new InvalidEnrollmentException("Subject not found: " + id));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject not found: " + id));
 
         // remove enrollments that still point at this subject so deletion can proceed cleanly
         enrollmentRepository.deleteByCourseCode(subject.getCode());
@@ -47,8 +54,8 @@ public class SubjectService {
 
     public SubjectDto getSubject(Long id) {
         return subjectRepository.findById(id)
-                .map(this::toDto)
-                .orElseThrow(() -> new InvalidEnrollmentException("Subject not found: " + id));
+            .map(this::toDto)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject not found: " + id));
     }
 
     public List<SubjectDto> getSubjectsByFilter(String nameFilter, Integer minCredits) {

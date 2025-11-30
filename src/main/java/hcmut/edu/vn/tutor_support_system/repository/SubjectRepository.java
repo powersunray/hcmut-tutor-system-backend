@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class SubjectRepository {
 
-    private final List<Subject> subjects = new ArrayList<>();
+    private final List<Subject> subjects = java.util.Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong idSequence = new AtomicLong(1);
 
     @PostConstruct
@@ -40,9 +40,11 @@ public class SubjectRepository {
     }
 
     public Optional<Subject> findByCode(String code) {
+        if (code == null) return Optional.empty();
+        String normalized = code.trim().toUpperCase();
         return subjects.stream()
-                .filter(s -> s.getCode().equalsIgnoreCase(code))
-                .findFirst();
+            .filter(s -> s.getCode() != null && s.getCode().toUpperCase().equals(normalized))
+            .findFirst();
     }
 
     public List<Subject> findByPrerequisitesContaining(String prerequisiteCode) {
@@ -65,6 +67,10 @@ public class SubjectRepository {
     }
 
     public Subject save(Subject subject) {
+        // normalize code for deterministic comparisons
+        if (subject.getCode() != null) {
+            subject.setCode(subject.getCode().trim().toUpperCase());
+        }
         if (subject.getId() == null) {
             subject.setId(idSequence.getAndIncrement());
         }
