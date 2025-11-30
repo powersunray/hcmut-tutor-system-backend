@@ -32,8 +32,8 @@ Content-Type: application/json
 
 {
   "studentId": "{{studentIdString}}",
-  "availabilityId": "slot-1",
-  "preferredMode": "OFFLINE"
+  "availabilityId": "slot-2",
+  "preferredMode": "HYBRID"
 }
 
 ### ============================================

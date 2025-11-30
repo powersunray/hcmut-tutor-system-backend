@@ -1,8 +1,8 @@
 package hcmut.edu.vn.tutor_support_system.controller;
 
-import hcmut.edu.vn.tutor_support_system.dto.SessionRescheduleRequest;
+import hcmut.edu.vn.tutor_support_system.dto.SessionRescheduleRequestDto;
 import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
-import hcmut.edu.vn.tutor_support_system.dto.SessionUpdateRequest;
+import hcmut.edu.vn.tutor_support_system.dto.SessionUpdateRequestDto;
 import hcmut.edu.vn.tutor_support_system.entity.SessionStatus;
 import hcmut.edu.vn.tutor_support_system.exception.SessionNotFoundException;
 import hcmut.edu.vn.tutor_support_system.service.SessionManagementService;
@@ -25,8 +25,6 @@ public class SessionManagementController {
   @GetMapping("/{sessionId}")
   public ResponseEntity<SessionResponseDto> getSessionById(@PathVariable String sessionId) {
     log.info("GET request for session: {}", sessionId);
-//    SessionResponseDto response = sessionManagementService.getSessionById(UUID.fromString(sessionId));
-//    return ResponseEntity.ok(response);
     // Try UUID first, then fallback to session_id lookup
     try {
       return ResponseEntity.ok(sessionManagementService.getSessionById(UUID.fromString(sessionId)));
@@ -66,7 +64,7 @@ public class SessionManagementController {
   @PutMapping("/{sessionId}")
   public ResponseEntity<SessionResponseDto> updateSession(
       @PathVariable String sessionId,
-      @RequestBody SessionUpdateRequest request) {
+      @RequestBody SessionUpdateRequestDto request) {
     log.info("PUT request to update session: {}", sessionId);
     try {
       // Try UUID first
@@ -92,7 +90,7 @@ public class SessionManagementController {
   @PutMapping("/{sessionId}/reschedule")
   public ResponseEntity<SessionResponseDto> rescheduleSession(
       @PathVariable String sessionId,
-      @RequestBody SessionRescheduleRequest request) {
+      @RequestBody SessionRescheduleRequestDto request) {
     log.info("PUT /sessions/{}/reschedule", sessionId);
     SessionResponseDto response = sessionManagementService.rescheduleSession(
         UUID.fromString(sessionId), request);

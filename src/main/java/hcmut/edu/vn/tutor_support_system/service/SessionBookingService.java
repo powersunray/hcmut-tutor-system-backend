@@ -1,6 +1,6 @@
 package hcmut.edu.vn.tutor_support_system.service;
 
-import hcmut.edu.vn.tutor_support_system.dto.SessionBookingRequest;
+import hcmut.edu.vn.tutor_support_system.dto.SessionBookingRequestDto;
 import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
 import hcmut.edu.vn.tutor_support_system.entity.*;
 import hcmut.edu.vn.tutor_support_system.exception.InvalidSessionDetailsException;
@@ -47,7 +47,7 @@ public class SessionBookingService {
   }
 
   /** UC-5 steps 3–7: booking a session after the student picks a slot. */
-  public SessionResponseDto bookSession(String tutorId, SessionBookingRequest request) {
+  public SessionResponseDto bookSession(String tutorId, SessionBookingRequestDto request) {
     log.info("Booking session for tutor: {}, student: {}", tutorId, request.getStudentId());
 
     // PRE-2/3: student profile authenticated + selected tutor (authentication via

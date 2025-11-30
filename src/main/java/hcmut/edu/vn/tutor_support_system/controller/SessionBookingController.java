@@ -1,7 +1,7 @@
 package hcmut.edu.vn.tutor_support_system.controller;
 
 import hcmut.edu.vn.tutor_support_system.dto.AvailabilityDto;
-import hcmut.edu.vn.tutor_support_system.dto.SessionBookingRequest;
+import hcmut.edu.vn.tutor_support_system.dto.SessionBookingRequestDto;
 import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
 import hcmut.edu.vn.tutor_support_system.entity.Availability;
 import hcmut.edu.vn.tutor_support_system.mapper.DtoMapper;
@@ -35,7 +35,7 @@ public class SessionBookingController {
   @PostMapping("/tutors/{tutorId}/sessions")
   public ResponseEntity<SessionResponseDto> bookSession(
       @PathVariable String tutorId,
-      @RequestBody SessionBookingRequest request) {
+      @RequestBody SessionBookingRequestDto request) {
     log.info("POST /tutors/{}/sessions - student: {}", tutorId, request.getStudentId());
     SessionResponseDto response = sessionBookingService.bookSession(tutorId, request);
     log.info("Session booked: {}", response.getSessionId());

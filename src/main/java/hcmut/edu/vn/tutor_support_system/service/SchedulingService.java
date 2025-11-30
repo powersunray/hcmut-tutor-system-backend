@@ -7,9 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,47 +20,56 @@ public class SchedulingService {
 
   private final AvailabilityRepository availabilityRepository;
 
-  public List<Availability> getAvailableSlotsForTutor(Availability availability) {
-    log.info(
-        "Fetching available slots for availability: {}",
-        availability.getAvailabilityId());
-    return availabilityRepository
-        .findByAvailabilityId(availability.getAvailabilityId())
-        .stream()
-        .toList();
+  @Transactional(readOnly = true)
+  public Optional<Availability> getAvailabilityById(String availabilityId) {
+    log.info("Fetching availability for availabilityId: {}", availabilityId);
+    return availabilityRepository.findByAvailabilityId(availabilityId);
   }
 
+  @Transactional(readOnly = true)
   public List<Availability> getAvailableSlotsByDateRange(
-      Availability availability, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+      LocalDateTime startDateTime, LocalDateTime endDateTime) {
     log.info(
         "Fetching available slots for date range: {} to {}",
         startDateTime,
         endDateTime);
-    LocalTime startTime = startDateTime.toLocalTime();
-    LocalTime endTime = endDateTime.toLocalTime();
-    return availabilityRepository
-        .findByAvailabilityId(availability.getAvailabilityId())
-        .stream()
-        .filter(
-            a ->
-                !a.getStartTime().isBefore(startTime)
-                    && !a.getEndTime().isAfter(endTime))
+    return availabilityRepository.findAll().stream()
+        .filter(a -> {
+          // Convert recurring weekly slot to actual date range
+          LocalDate startDate = startDateTime.toLocalDate();
+          LocalDate endDate = endDateTime.toLocalDate();
+
+          // Check if the slot's day of week falls within the date range
+          LocalDate current = startDate;
+          while (!current.isAfter(endDate)) {
+            if (current.getDayOfWeek() == a.getDayOfWeek()) {
+              LocalDateTime slotDateTime = LocalDateTime.of(current, a.getStartTime());
+              // Check if slot is within the requested range
+              if (!slotDateTime.isBefore(startDateTime) && !slotDateTime.isAfter(endDateTime)) {
+                return true;
+              }
+            }
+            current = current.plusDays(1);
+          }
+          return false;
+        })
         .toList();
   }
 
+  @Transactional(readOnly = true)
   public List<Availability> getAllAvailableSlots() {
     log.info("Fetching all available slots");
-    List<Availability> slots =
-        availabilityRepository.findAll().stream()
-            .filter(a -> a.getPublished() != null && a.getPublished())
-            .toList();
+    List<Availability> slots = availabilityRepository.findAll().stream()
+        .filter(a -> a.getPublished() != null && a.getPublished())
+        .toList();
     log.info("Found {} published slots", slots.size());
     return slots;
   }
 
+  @Transactional(readOnly = true)
   public boolean isSlotAvailable(Availability availability) {
     boolean isAvailable = availability.getPublished() != null && availability.getPublished();
-    log.info("Slot {} availability status: {}", availability.getId(), isAvailable);
+    log.info("Slot {} availability status: {}", availability.getAvailabilityId(), isAvailable);
     return isAvailable;
   }
 }

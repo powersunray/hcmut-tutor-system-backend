@@ -1,6 +1,5 @@
 package hcmut.edu.vn.tutor_support_system.dto;
 
-import hcmut.edu.vn.tutor_support_system.entity.SessionMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,11 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SessionUpdateRequest {
+public class SessionRescheduleRequestDto {
 
-  private SessionMode mode;
+  private String availabilityId;
 
-  private String locationOrLink;
-
-  private String notes;
+  private String reason;
 }
