@@ -1,8 +1,39 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
-public enum SupportType {
-    SCHOLARSHIP,
-    ACADEMIC_HELP,
-    ADVISING,
-    EMPTY
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode(of = "id")
+@Entity
+@Table(name = "support_types")
+public class SupportType {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    @Size(max = 100)
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    @Size(max = 255)
+    private String description;
 }
