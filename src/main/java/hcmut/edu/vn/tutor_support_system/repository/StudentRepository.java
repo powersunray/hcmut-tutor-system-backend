@@ -4,49 +4,65 @@ import hcmut.edu.vn.tutor_support_system.entity.Profile;
 import hcmut.edu.vn.tutor_support_system.entity.Student;
 import hcmut.edu.vn.tutor_support_system.entity.UserRole;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import org.springframework.stereotype.Repository;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-@Getter
 public class StudentRepository {
 
     private final List<Student> students = new ArrayList<>();
 
     @PostConstruct
     public void init() {
-        // Sample student
-        Student s1 = new Student();
-        s1.setStudentId("2352999");
-//        s1.setSsoId("20520001");
-        s1.setFirstName("Nam");
-        s1.setLastName("Nguyen");
-        s1.setEmail("nam.nguyen@hcmut.edu.vn");
-        s1.setRole(UserRole.STUDENT);
-//        s1.setCreatedAt(LocalDateTime.now());
+        // Seed a couple of students so GET requests immediately return meaningful data
+        Student lan = buildStudent(1L, 1001L, "Lan", "Nguyen", "lan.nguyen@hcmut.edu.vn", "0901234567", "Software Engineering", "Computer Science", 3, 3.4, "Campus 01");
+        Student minh = buildStudent(2L, 1002L, "Minh", "Tran", "minh.tran@hcmut.edu.vn", "0907654321", "Information Systems", "Business IT", 2, 3.8, "Campus 02");
 
-//        Profile p1 = new Profile();
-        Profile p1 = new Profile();
-        p1.setProfileId("profile-s1");
-        p1.setCampus("Campus 01");
-        p1.setPhoneNumber("0901234567");
-        s1.setProfile(p1);
+        students.add(lan);
+        students.add(minh);
+    }
 
-        students.add(s1);
+    private Student buildStudent(Long id,
+                                 Long studentNumber,
+                                 String firstName,
+                                 String lastName,
+                                 String email,
+                                 String phone,
+                                 String major,
+                                 String faculty,
+                                 Integer yearOfStudy,
+                                 Double gpa,
+                                 String campus) {
+        Student s = new Student();
+        s.setId(id);
+        s.setStudentId(studentNumber);
+        s.setFirstName(firstName);
+        s.setLastName(lastName);
+        s.setEmail(email);
+        s.setRole(UserRole.STUDENT);
+        s.setFullName(firstName + " " + lastName);
+        s.setPhone(phone);
+        s.setMajor(major);
+        s.setFaculty(faculty);
+        s.setYearOfStudy(yearOfStudy);
+        s.setGpa(gpa);
+        s.setProfile(new Profile("profile-" + id, phone, campus, null, null));
+        s.setCreatedAt(OffsetDateTime.now());
+        s.setUpdatedAt(OffsetDateTime.now());
+        return s;
+    }
+
+    public Optional<Student> findByStudentId(Long studentId) {
+        return students.stream()
+                .filter(s -> s.getStudentId().equals(studentId))
+                .findFirst();
     }
 
     public List<Student> findAll() {
         return students;
-    }
-
-    public Optional<Student> findById(String id) {
-        return students.stream()
-                .filter(s -> Objects.equals(s.getStudentId(), id))
-                .findFirst();
     }
 }

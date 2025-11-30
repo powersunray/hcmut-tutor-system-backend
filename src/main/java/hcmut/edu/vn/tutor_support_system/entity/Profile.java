@@ -1,5 +1,6 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Embeddable
 public class Profile {
 
     private String profileId;
