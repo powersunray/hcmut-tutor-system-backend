@@ -18,7 +18,7 @@ public class SessionResponseDto {
     private String tutorId;
     private String tutorName;
 
-    private String studentId;
+    private Long studentId;
     private String studentName;
 
     private LocalDateTime startTime;
