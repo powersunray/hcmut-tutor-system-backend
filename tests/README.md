@@ -11,21 +11,25 @@ This test suite validates all API endpoints based on the scenarios defined in [`
 The test suite covers:
 
 - **Enrollment API** (6 tests)
+
   - Get enrollments by student, semester, and status
   - Create new enrollments
   - Duplicate enrollment validation
 
 - **Support Needs API** (6 tests)
+
   - Get support needs by student, type, and status
   - Create new support needs
   - Statistics endpoints
 
 - **Staff API** (6 tests)
+
   - Get staff by role, department, and ID
   - Create new staff members
   - Staff count statistics
 
 - **Validation Tests** (3 tests)
+
   - Invalid student ID format
   - Invalid course code format
   - Invalid support type
@@ -41,11 +45,13 @@ The test suite covers:
 Before running the tests, ensure:
 
 1. **Database is running** with test data:
+
    ```bash
    ./setup_postgres_db.sh
    ```
 
 2. **Backend server is running**:
+
    ```bash
    mvn clean install && java -jar target/tutor-support-system-0.0.1-SNAPSHOT.jar
    ```
@@ -63,12 +69,14 @@ Before running the tests, ensure:
 ### Test Output
 
 The script provides:
+
 - Color-coded output (green for pass, red for fail, blue for sections)
 - Real-time test execution status
 - Prerequisites verification
 - Summary with pass/fail counts and percentage
 
 Example output:
+
 ```
 =================================================
 1. ENROLLMENT API TESTS
@@ -110,23 +118,30 @@ This test script can be integrated into CI/CD pipelines:
 ## Troubleshooting
 
 ### Database Not Running
+
 ```
 Error: PostgreSQL container is not running
 Please run: ./setup_postgres_db.sh
 ```
+
 **Solution:** Start the database with `./setup_postgres_db.sh`
 
 ### Server Not Accessible
+
 ```
 Error: Backend server is not accessible at http://localhost:8080
 ```
+
 **Solution:** Start the backend server:
+
 ```bash
 mvn clean install && java -jar target/tutor-support-system-0.0.1-SNAPSHOT.jar
 ```
 
 ### Connection Refused
+
 If tests fail with connection errors, ensure:
+
 - Database is running on port 5432
 - Server is running on port 8080
 - No firewall blocking connections
@@ -147,6 +162,7 @@ See [`docs/API_TEST_SCENARIOS.md`](../docs/API_TEST_SCENARIOS.md) for complete t
 To add new tests:
 
 1. Add a new test section in `run_api_tests.sh`:
+
    ```bash
    print_test "Your test description"
    response=$(curl -s "$BASE_URL/your/endpoint")
@@ -162,6 +178,7 @@ To add new tests:
 ## Manual Testing
 
 For manual testing with curl commands, refer to:
+
 - [`docs/API_TEST_SCENARIOS.md`](../docs/API_TEST_SCENARIOS.md) - Complete curl command reference
 - Individual test sections in `run_api_tests.sh` - See exact curl commands used
 
