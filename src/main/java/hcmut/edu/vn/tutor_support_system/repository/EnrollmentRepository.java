@@ -101,4 +101,8 @@ public class EnrollmentRepository {
     public void deleteById(Long id) {
         enrollments.removeIf(e -> e.getId().equals(id));
     }
+
+    public void deleteByCourseCode(String courseCode) {
+        enrollments.removeIf(e -> e.getCourseCode() != null && e.getCourseCode().equalsIgnoreCase(courseCode));
+    }
 }

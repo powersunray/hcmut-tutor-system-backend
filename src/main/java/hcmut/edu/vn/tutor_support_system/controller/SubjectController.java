@@ -63,6 +63,8 @@ public class SubjectController {
     @Operation(summary = "Delete subject")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         subjectService.deleteSubject(id);
-        return ResponseEntity.ok(ApiResponse.success("Subject deleted", null));
+        return ResponseEntity.ok(ApiResponse.success(
+                "Subject removed and any related enrollments cleared so dashboards stay up to date",
+                null));
     }
 }

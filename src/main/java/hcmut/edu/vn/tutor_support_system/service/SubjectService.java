@@ -37,20 +37,12 @@ public class SubjectService {
     }
 
     public void deleteSubject(Long id) {
-        enrollmentRepository.findAll().stream()
-                .filter(enrollment -> dtoReferencesSubject(enrollment.getCourseCode(), id))
-                .findFirst()
-                .ifPresent(enrollment -> {
-                    throw new InvalidEnrollmentException("Subject is referenced by existing enrollments");
-                });
-        subjectRepository.deleteById(id);
-    }
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new InvalidEnrollmentException("Subject not found: " + id));
 
-    private boolean dtoReferencesSubject(String courseCode, Long subjectId) {
-        return subjectRepository.findById(subjectId)
-                .map(Subject::getCode)
-                .map(code -> code.equalsIgnoreCase(courseCode))
-                .orElse(false);
+        // remove enrollments that still point at this subject so deletion can proceed cleanly
+        enrollmentRepository.deleteByCourseCode(subject.getCode());
+        subjectRepository.deleteById(id);
     }
 
     public SubjectDto getSubject(Long id) {
