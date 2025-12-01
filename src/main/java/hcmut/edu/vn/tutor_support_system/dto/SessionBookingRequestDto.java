@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SessionBookingRequest {
+public class SessionBookingRequestDto {
 
   private String studentId;
   private String availabilityId;

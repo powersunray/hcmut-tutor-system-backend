@@ -1,13 +1,12 @@
 package hcmut.edu.vn.tutor_support_system.mapper;
 
-import hcmut.edu.vn.tutor_support_system.dto.AvailabilityDto;
-import hcmut.edu.vn.tutor_support_system.dto.EnrollmentDto;
-import hcmut.edu.vn.tutor_support_system.dto.StaffDto;
-import hcmut.edu.vn.tutor_support_system.dto.SupportNeedDto;
+import hcmut.edu.vn.tutor_support_system.dto.*;
 import hcmut.edu.vn.tutor_support_system.entity.Availability;
 import hcmut.edu.vn.tutor_support_system.entity.Enrollment;
 import hcmut.edu.vn.tutor_support_system.entity.Staff;
 import hcmut.edu.vn.tutor_support_system.entity.SupportNeed;
+import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
+import hcmut.edu.vn.tutor_support_system.entity.Session;
 import java.time.format.DateTimeFormatter;
 
 public final class DtoMapper {
@@ -78,6 +77,33 @@ public final class DtoMapper {
         .staffRole(staff.getStaffRole())
         .department(staff.getDepartment())
         .campus(staff.getProfile() != null ? staff.getProfile().getCampus() : null)
+        .build();
+  }
+
+  public static SessionResponseDto toSessionResponseDto(Session session) {
+    if (session == null) {
+      return null;
+    }
+
+    String tutorName = (session.getTutor() != null)
+        ? session.getTutor().getFirstName() + " " + session.getTutor().getLastName()
+        : null;
+
+    String studentName = (session.getStudent() != null)
+        ? session.getStudent().getFirstName() + " " + session.getStudent().getLastName()
+        : null;
+
+    return SessionResponseDto.builder()
+        .sessionId(session.getSessionId())
+        .tutorId(session.getTutor() != null ? session.getTutor().getTutorId() : null)
+        .tutorName(tutorName)
+        .studentId(session.getStudent() != null ? session.getStudent().getStudentId() : null)
+        .studentName(studentName)
+        .startTime(session.getStartTime())
+        .endTime(session.getEndTime())
+        .mode(session.getMode())
+        .locationOrLink(session.getLocationOrLink())
+        .status(session.getStatus())
         .build();
   }
 }

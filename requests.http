@@ -1,0 +1,199 @@
+### ============================================
+### TUTOR SUPPORT SYSTEM - COMPLETE API TESTS
+### FOR SESSION SCHEDULING & BOOKING FLOW
+### ============================================
+
+@baseUrl = http://localhost:8080/api
+@tutorId = aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+@tutorIdString = tutor-1
+@studentId = cccccccc-cccc-cccc-cccc-cccccccccccc
+@studentIdString = 2110001
+@availabilityId = eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee
+@sessionId = 14141414-1414-1414-1414-141414141414
+
+### ============================================
+### NORMAL FLOW - STEP 1: GET AVAILABLE SLOTS
+### ============================================
+### Description: Student views available slots for a tutor
+### Expected: 200 OK with list of AvailabilityDto
+### Flow: Step 2 - System redirects to available slots page
+
+GET {{baseUrl}}/tutors/{{tutorIdString}}/slots
+
+### ============================================
+### NORMAL FLOW - STEP 2: BOOK SESSION (BASIC)
+### ============================================
+### Description: Student books a session from available slot
+### Expected: 200 OK with SessionResponseDto
+### Flow: Steps 3-5 - Student selects slot, confirms, session created
+
+POST {{baseUrl}}/tutors/{{tutorIdString}}/sessions
+Content-Type: application/json
+
+{
+  "studentId": "{{studentIdString}}",
+  "availabilityId": "slot-2",
+  "preferredMode": "HYBRID"
+}
+
+### ============================================
+### ALT FLOW 2a: HYBRID MODE - STUDENT CHOOSES PREFERENCE
+### ============================================
+### Description: When tutor offers HYBRID, student chooses ONLINE/OFFLINE
+### Expected: 200 OK with session in preferred mode
+### Flow: Step 2a - Student chooses preferred mode from hybrid options
+
+POST {{baseUrl}}/tutors/{{tutorIdString}}/sessions
+Content-Type: application/json
+
+{
+  "studentId": "{{studentIdString}}",
+  "availabilityId": "slot-3",
+  "preferredMode": "ONLINE"
+}
+
+### ============================================
+### ALT FLOW 4a: PENDING TUTOR APPROVAL
+### ============================================
+### Description: Tutor requires confirmation before booking
+### Expected: 200 OK with status=PENDING or PENDING_TUTOR_APPROVAL
+### Flow: Step 4a - Session marked waiting for tutor approval
+
+GET {{baseUrl}}/sessions/{{sessionId}}
+
+### ============================================
+### EXCEPTION 3a: INVALID SESSION DETAILS
+### ============================================
+### Description: Try to book from slot with missing details
+### Expected: 400 Bad Request - InvalidSessionDetailsException
+### Flow: Step 3a - System detects missing/invalid details
+
+POST {{baseUrl}}/tutors/{{tutorIdString}}/sessions
+Content-Type: application/json
+
+{
+  "studentId": "{{studentIdString}}",
+  "availabilityId": "invalid-slot-xxx",
+  "preferredMode": "OFFLINE"
+}
+
+### ============================================
+### NORMAL FLOW - STEP 6: GET SESSION BY ID
+### ============================================
+### Description: Retrieve specific session details
+### Expected: 200 OK with SessionResponseDto
+### Flow: Step 5 - Session record created and retrievable
+
+GET {{baseUrl}}/sessions/{{sessionId}}
+
+### ============================================
+### NORMAL FLOW - STEP 7: UPDATE SESSION STATUS
+### ============================================
+### Description: Tutor confirms the booking
+### Expected: 200 OK with status=CONFIRMED
+### Flow: Step 4a → 5 - Tutor approves pending session
+
+PUT {{baseUrl}}/sessions/{{sessionId}}/status?status=CONFIRMED
+
+### ============================================
+### NORMAL FLOW - UPDATE SESSION DETAILS
+### ============================================
+### Description: Update session mode or location (step 6 - calendar update)
+### Expected: 200 OK with updated SessionResponseDto
+
+PUT {{baseUrl}}/sessions/{{sessionId}}
+Content-Type: application/json
+
+{
+  "mode": "OFFLINE",
+  "locationOrLink": "Room C6-403 & https://zoom.us/meeting"
+}
+
+### ============================================
+### NORMAL FLOW - STEP 6: VIEW ALL SESSIONS BY TUTOR
+### ============================================
+### Description: List all sessions for a specific tutor
+### Expected: 200 OK with list of SessionResponseDto
+### Flow: Step 6 - Update tutor calendar
+
+GET {{baseUrl}}/sessions/tutor/{{tutorIdString}}
+
+### ============================================
+### NORMAL FLOW - STEP 6: VIEW ALL SESSIONS BY STUDENT
+### ============================================
+### Description: List all sessions for a specific student
+### Expected: 200 OK with list of SessionResponseDto
+### Flow: Step 6 - Update student calendar
+
+GET {{baseUrl}}/sessions/student/{{studentIdString}}
+
+### ============================================
+### EXCEPTION 4b: MULTIPLE BOOKING / SLOT CONFLICT
+### ============================================
+### Description: Try to book same slot twice (conflict detection)
+### Expected: 409 Conflict - SlotUnavailableException
+### Flow: Step 4b - System detects overlapping booking
+
+POST {{baseUrl}}/tutors/{{tutorIdString}}/sessions
+Content-Type: application/json
+
+{
+  "studentId": "2110002",
+  "availabilityId": "slot-1",
+  "preferredMode": "OFFLINE"
+}
+
+### ============================================
+### EXCEPTION 7a: CANCEL SESSION & SUGGEST ALTERNATIVES
+### ============================================
+### Description: Tutor cancels confirmed session
+### Expected: 200 OK with status=CANCELLED
+### Flow: Exception 7a - Tutor cancels after confirmation
+
+PUT {{baseUrl}}/sessions/{{sessionId}}/status?status=CANCELLED
+
+### ============================================
+### VIEW CANCELLED SESSIONS
+### ============================================
+### Description: Verify session is marked cancelled
+### Expected: 200 OK with status=CANCELLED
+
+GET {{baseUrl}}/sessions/{{sessionId}}
+
+### ============================================
+### VALIDATION: INVALID STUDENT ID
+### ============================================
+### Description: Try to book with non-existent student
+### Expected: 404 Not Found - Student not found
+
+POST {{baseUrl}}/tutors/{{tutorIdString}}/sessions
+Content-Type: application/json
+
+{
+  "studentId": "9999999",
+  "availabilityId": "slot-1",
+  "preferredMode": "OFFLINE"
+}
+
+### ============================================
+### VALIDATION: INVALID TUTOR ID
+### ============================================
+### Description: Try to get slots for non-existent tutor
+### Expected: 404 Not Found - Tutor not found
+
+GET {{baseUrl}}/tutors/invalid-tutor-999/slots
+
+### ============================================
+### VALIDATION: INVALID AVAILABILITY ID
+### ============================================
+### Description: Try to book unavailable slot
+### Expected: 404 Not Found - Availability slot not found
+
+POST {{baseUrl}}/tutors/{{tutorIdString}}/sessions
+Content-Type: application/json
+
+{
+  "studentId": "{{studentIdString}}",
+  "availabilityId": "invalid-slot-12345",
+  "preferredMode": "OFFLINE"
+}
