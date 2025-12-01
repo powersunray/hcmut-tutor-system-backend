@@ -20,13 +20,11 @@ public class SchedulingService {
 
   private final AvailabilityRepository availabilityRepository;
 
-  @Transactional(readOnly = true)
   public Optional<Availability> getAvailabilityById(String availabilityId) {
     log.info("Fetching availability for availabilityId: {}", availabilityId);
     return availabilityRepository.findByAvailabilityId(availabilityId);
   }
 
-  @Transactional(readOnly = true)
   public List<Availability> getAvailableSlotsByDateRange(
       LocalDateTime startDateTime, LocalDateTime endDateTime) {
     log.info(
@@ -56,7 +54,6 @@ public class SchedulingService {
         .toList();
   }
 
-  @Transactional(readOnly = true)
   public List<Availability> getAllAvailableSlots() {
     log.info("Fetching all available slots");
     List<Availability> slots = availabilityRepository.findAll().stream()
@@ -66,7 +63,6 @@ public class SchedulingService {
     return slots;
   }
 
-  @Transactional(readOnly = true)
   public boolean isSlotAvailable(Availability availability) {
     boolean isAvailable = availability.getPublished() != null && availability.getPublished();
     log.info("Slot {} availability status: {}", availability.getAvailabilityId(), isAvailable);

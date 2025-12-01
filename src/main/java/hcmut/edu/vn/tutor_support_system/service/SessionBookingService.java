@@ -112,7 +112,6 @@ public class SessionBookingService {
 
     // Step 5: create session record
     Session session = new Session();
-//    session.setId(UUID.randomUUID());
     session.setSessionId(UUID.randomUUID().toString());
     session.setTutor(tutor);
     session.setStudent(student);
