@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableJpaAuditing
 public class TutorSupportSystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TutorSupportSystemApplication.class, args);
-	}
-	@RequestMapping(value = "/")
-	public String helloWorld() {
-		return "Hello World!";
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(TutorSupportSystemApplication.class, args);
+  }
 
+  @RequestMapping(value = "/")
+  public String helloWorld() {
+    return "Hello World!";
+  }
 }

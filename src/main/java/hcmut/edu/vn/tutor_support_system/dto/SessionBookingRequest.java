@@ -15,6 +15,6 @@ public class SessionBookingRequest {
     private Long studentId;
     private String availabilityId;
 
-    // Only needed if a slot supports both modes (UC-5 alt 2a)
-    private SessionMode preferredMode;
+  // Only needed if a slot supports both modes (UC-5 alt 2a)
+  private SessionMode preferredMode;
 }

@@ -1,8 +1,8 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
 public enum StaffRole {
-    ADS,
-    OAA,
-    OSA,
-    EMPTY
+  ADS,
+  OAA,
+  OSA,
+  EMPTY
 }

@@ -6,18 +6,20 @@ import hcmut.edu.vn.tutor_support_system.entity.*;
 import hcmut.edu.vn.tutor_support_system.exception.InvalidSessionDetailsException;
 import hcmut.edu.vn.tutor_support_system.exception.ResourceNotFoundException;
 import hcmut.edu.vn.tutor_support_system.exception.SlotUnavailableException;
+import hcmut.edu.vn.tutor_support_system.repository.AvailabilityRepository;
 import hcmut.edu.vn.tutor_support_system.repository.SessionRepository;
 import hcmut.edu.vn.tutor_support_system.repository.StudentRepository;
 import hcmut.edu.vn.tutor_support_system.repository.TutorRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SessionBookingService {
 
     private final TutorRepository tutorRepository;
@@ -117,12 +119,27 @@ public class SessionBookingService {
         return LocalDateTime.of(date, time);
     }
 
-    private void updateCalendars(Session session) {
-        // UC-5 step 6: update tutor and student calendars (MVP: no-op / log)
+    // Handle alt 2a: when availability supports both modes (HYBRID), we use
+    // student's preferred mode
+    SessionMode finalMode = availability.getMode();
+    if (availability.getMode() == SessionMode.HYBRID && request.getPreferredMode() != null) {
+      finalMode = request.getPreferredMode();
     }
 
-    private void sendBookingNotifications(Session session) {
-        // UC-5 step 7: send notifications to tutor and student (MVP: no-op / log)
+    // Exception 4b: multiple booking / overlapping
+    // For MVP we simply check whether another session with the same tutor overlaps
+    // exactly in time.
+    for (Session existing : sessionRepository.findByTutor(tutor)) {
+      boolean sameSlot =
+          existing
+                  .getStartTime()
+                  .equals(toDateTime(availability.getDayOfWeek(), availability.getStartTime()))
+              && existing
+                  .getEndTime()
+                  .equals(toDateTime(availability.getDayOfWeek(), availability.getEndTime()));
+      if (sameSlot) {
+        throw new SlotUnavailableException("Slot unavailable: already booked.");
+      }
     }
 
     private SessionResponseDto toSessionResponseDto(Session session) {
@@ -142,4 +159,31 @@ public class SessionBookingService {
                 .status(session.getStatus())
                 .build();
     }
+    return LocalDateTime.of(date, time);
+  }
+
+  private void updateCalendars(Session session) {
+    // UC-5 step 6: update tutor and student calendars (MVP: no-op / log)
+  }
+
+  private void sendBookingNotifications(Session session) {
+    // UC-5 step 7: send notifications to tutor and student (MVP: no-op / log)
+  }
+
+  private SessionResponseDto toSessionResponseDto(Session session) {
+    return SessionResponseDto.builder()
+        .sessionId(session.getId())
+        .tutorId(session.getTutor().getTutorId())
+        .tutorName(session.getTutor().getFirstName())
+        .tutorName(session.getTutor().getLastName())
+        .studentId(session.getStudent().getStudentId())
+        .studentName(session.getStudent().getFirstName())
+        .studentName(session.getStudent().getLastName())
+        .startTime(session.getStartTime())
+        .endTime(session.getEndTime())
+        .mode(session.getMode())
+        .locationOrLink(session.getLocationOrLink())
+        .status(session.getStatus())
+        .build();
+  }
 }

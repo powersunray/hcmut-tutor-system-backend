@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: tutoring_system_postgres
+    environment:
+      POSTGRES_DB: tutoring_system_db
+      POSTGRES_USER: tutoring_user
+      POSTGRES_PASSWORD: secure_password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_schema_jpa.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./postgres_dummy_data_jpa.sql:/docker-entrypoint-initdb.d/02-data.sql
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
