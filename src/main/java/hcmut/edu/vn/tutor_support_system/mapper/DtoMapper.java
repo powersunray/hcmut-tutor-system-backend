@@ -1,13 +1,24 @@
 package hcmut.edu.vn.tutor_support_system.mapper;
 
+import hcmut.edu.vn.tutor_support_system.dto.AvailabilityDto;
+import hcmut.edu.vn.tutor_support_system.dto.EnrollmentDto;
+import hcmut.edu.vn.tutor_support_system.dto.StaffDto;
+import hcmut.edu.vn.tutor_support_system.dto.SupportNeedDto;
+import hcmut.edu.vn.tutor_support_system.dto.TutorProfileDto;
+import hcmut.edu.vn.tutor_support_system.dto.UserProfileDto;
 import hcmut.edu.vn.tutor_support_system.dto.*;
 import hcmut.edu.vn.tutor_support_system.entity.Availability;
 import hcmut.edu.vn.tutor_support_system.entity.Enrollment;
 import hcmut.edu.vn.tutor_support_system.entity.Staff;
 import hcmut.edu.vn.tutor_support_system.entity.SupportNeed;
+import hcmut.edu.vn.tutor_support_system.entity.Tutor;
+import hcmut.edu.vn.tutor_support_system.entity.Student;
+import hcmut.edu.vn.tutor_support_system.entity.User;
+
 import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
 import hcmut.edu.vn.tutor_support_system.entity.Session;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 public final class DtoMapper {
   private DtoMapper() {}
@@ -80,6 +91,36 @@ public final class DtoMapper {
         .build();
   }
 
+  public static UserProfileDto toUserProfileDto(User user) {
+    UserProfileDto.UserProfileDtoBuilder builder = UserProfileDto.builder()
+        .id(user.getId())
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .email(user.getEmail())
+        .role(user.getRole() != null ? user.getRole().name() : null)
+        .createdAt(user.getCreatedAt())
+        .updatedAt(user.getUpdatedAt());
+        
+    if (user.getProfile() != null) {
+        builder.phoneNumber(user.getProfile().getPhoneNumber())
+               .campus(user.getProfile().getCampus());
+    }
+    
+    if (user instanceof Student) {
+        Student student = (Student) user;
+        builder.studentId(student.getStudentId())
+               .faculty(student.getFaculty())
+               .major(student.getMajor());
+    } else if (user instanceof Tutor) {
+        Tutor tutor = (Tutor) user;
+        builder.tutorId(tutor.getTutorId())
+               .bio(tutor.getBio()) // Tutor has its own bio field which might override or complement Profile bio
+               .averageRating(tutor.getAverageRating())
+               .ratingCount(tutor.getRatingCount())
+               .expertiseAreas(tutor.getExpertiseAreasString());
+    }
+
+    return builder.build();
   public static SessionResponseDto toSessionResponseDto(Session session) {
     if (session == null) {
       return null;
