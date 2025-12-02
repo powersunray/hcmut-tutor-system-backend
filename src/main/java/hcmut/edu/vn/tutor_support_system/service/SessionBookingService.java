@@ -1,6 +1,6 @@
 package hcmut.edu.vn.tutor_support_system.service;
 
-import hcmut.edu.vn.tutor_support_system.dto.SessionBookingRequest;
+import hcmut.edu.vn.tutor_support_system.dto.SessionBookingRequestDto;
 import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
 import hcmut.edu.vn.tutor_support_system.entity.*;
 import hcmut.edu.vn.tutor_support_system.exception.InvalidSessionDetailsException;
@@ -10,15 +10,18 @@ import hcmut.edu.vn.tutor_support_system.repository.AvailabilityRepository;
 import hcmut.edu.vn.tutor_support_system.repository.SessionRepository;
 import hcmut.edu.vn.tutor_support_system.repository.StudentRepository;
 import hcmut.edu.vn.tutor_support_system.repository.TutorRepository;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class SessionBookingService {
 
@@ -32,16 +35,20 @@ public class SessionBookingService {
   public List<Availability> getAvailableSlots(String tutorId) {
     // Preconditions PRE-3 & PRE-4 are checked by ensuring tutor exists and has
     // slots
+    log.info("Fetching available slots for tutor: {}", tutorId);
     Tutor tutor =
         tutorRepository
             .findByTutorId(tutorId)
             .orElseThrow(() -> new ResourceNotFoundException("Tutor not found: " + tutorId));
 
-    return availabilityRepository.findByTutorAndPublishedTrue(tutor);
+    List<Availability> slots = availabilityRepository.findByTutorAndPublishedTrue(tutor);
+    log.info("Found {} available slots for tutor: {}", slots.size(), tutorId);
+    return slots;
   }
 
   /** UC-5 steps 3–7: booking a session after the student picks a slot. */
-  public SessionResponseDto bookSession(String tutorId, SessionBookingRequest request) {
+  public SessionResponseDto bookSession(String tutorId, SessionBookingRequestDto request) {
+    log.info("Booking session for tutor: {}, student: {}", tutorId, request.getStudentId());
 
     // PRE-2/3: student profile authenticated + selected tutor (authentication via
     // SSO is outside this service)
@@ -119,7 +126,8 @@ public class SessionBookingService {
     session.setMode(finalMode);
     session.setStatus(status);
 
-    sessionRepository.save(session);
+    Session savedSession = sessionRepository.save(session);
+    log.info("Session created with ID: {}", savedSession.getSessionId());
 
     // Steps 6 & 7: update calendars + send notifications (MVP: stub methods)
     updateCalendars(session);
@@ -139,11 +147,11 @@ public class SessionBookingService {
   }
 
   private void updateCalendars(Session session) {
-    // UC-5 step 6: update tutor and student calendars (MVP: no-op / log)
+    log.info("Updating calendars for session: {}", session.getId());
   }
 
   private void sendBookingNotifications(Session session) {
-    // UC-5 step 7: send notifications to tutor and student (MVP: no-op / log)
+    log.info("Sending booking notifications for session: {}", session.getId());
   }
 
   private SessionResponseDto toSessionResponseDto(Session session) {

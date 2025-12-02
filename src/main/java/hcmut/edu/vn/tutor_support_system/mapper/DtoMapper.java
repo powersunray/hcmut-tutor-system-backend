@@ -6,6 +6,7 @@ import hcmut.edu.vn.tutor_support_system.dto.StaffDto;
 import hcmut.edu.vn.tutor_support_system.dto.SupportNeedDto;
 import hcmut.edu.vn.tutor_support_system.dto.TutorProfileDto;
 import hcmut.edu.vn.tutor_support_system.dto.UserProfileDto;
+import hcmut.edu.vn.tutor_support_system.dto.*;
 import hcmut.edu.vn.tutor_support_system.entity.Availability;
 import hcmut.edu.vn.tutor_support_system.entity.Enrollment;
 import hcmut.edu.vn.tutor_support_system.entity.Staff;
@@ -14,6 +15,8 @@ import hcmut.edu.vn.tutor_support_system.entity.Tutor;
 import hcmut.edu.vn.tutor_support_system.entity.Student;
 import hcmut.edu.vn.tutor_support_system.entity.User;
 
+import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
+import hcmut.edu.vn.tutor_support_system.entity.Session;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
@@ -118,5 +121,30 @@ public final class DtoMapper {
     }
 
     return builder.build();
+  public static SessionResponseDto toSessionResponseDto(Session session) {
+    if (session == null) {
+      return null;
+    }
+
+    String tutorName = (session.getTutor() != null)
+        ? session.getTutor().getFirstName() + " " + session.getTutor().getLastName()
+        : null;
+
+    String studentName = (session.getStudent() != null)
+        ? session.getStudent().getFirstName() + " " + session.getStudent().getLastName()
+        : null;
+
+    return SessionResponseDto.builder()
+        .sessionId(session.getSessionId())
+        .tutorId(session.getTutor() != null ? session.getTutor().getTutorId() : null)
+        .tutorName(tutorName)
+        .studentId(session.getStudent() != null ? session.getStudent().getStudentId() : null)
+        .studentName(studentName)
+        .startTime(session.getStartTime())
+        .endTime(session.getEndTime())
+        .mode(session.getMode())
+        .locationOrLink(session.getLocationOrLink())
+        .status(session.getStatus())
+        .build();
   }
 }
