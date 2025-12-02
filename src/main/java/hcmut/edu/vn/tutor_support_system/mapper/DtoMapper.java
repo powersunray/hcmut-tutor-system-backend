@@ -7,11 +7,21 @@ import hcmut.edu.vn.tutor_support_system.dto.SupportNeedDto;
 import hcmut.edu.vn.tutor_support_system.dto.UserDto;
 import hcmut.edu.vn.tutor_support_system.dto.CreateUserRequest;
 import hcmut.edu.vn.tutor_support_system.entity.User;
+import hcmut.edu.vn.tutor_support_system.dto.TutorProfileDto;
+import hcmut.edu.vn.tutor_support_system.dto.UserProfileDto;
+import hcmut.edu.vn.tutor_support_system.dto.*;
 import hcmut.edu.vn.tutor_support_system.entity.Availability;
 import hcmut.edu.vn.tutor_support_system.entity.Enrollment;
 import hcmut.edu.vn.tutor_support_system.entity.Staff;
 import hcmut.edu.vn.tutor_support_system.entity.SupportNeed;
+import hcmut.edu.vn.tutor_support_system.entity.Tutor;
+import hcmut.edu.vn.tutor_support_system.entity.Student;
+import hcmut.edu.vn.tutor_support_system.entity.User;
+
+import hcmut.edu.vn.tutor_support_system.dto.SessionResponseDto;
+import hcmut.edu.vn.tutor_support_system.entity.Session;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 public final class DtoMapper {
   private DtoMapper() {}
@@ -106,4 +116,60 @@ public final class DtoMapper {
         u.setRole(req.getRole());
         return u;
     }
+  public static UserProfileDto toUserProfileDto(User user) {
+    UserProfileDto.UserProfileDtoBuilder builder = UserProfileDto.builder()
+        .id(user.getId())
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .email(user.getEmail())
+        .role(user.getRole() != null ? user.getRole().name() : null)
+        .createdAt(user.getCreatedAt())
+        .updatedAt(user.getUpdatedAt());
+        
+    if (user.getProfile() != null) {
+        builder.phoneNumber(user.getProfile().getPhoneNumber())
+               .campus(user.getProfile().getCampus());
+    }
+    
+    if (user instanceof Student) {
+        Student student = (Student) user;
+        builder.studentId(student.getStudentId())
+               .faculty(student.getFaculty())
+               .major(student.getMajor());
+    } else if (user instanceof Tutor) {
+        Tutor tutor = (Tutor) user;
+        builder.tutorId(tutor.getTutorId())
+               .bio(tutor.getBio()) // Tutor has its own bio field which might override or complement Profile bio
+               .averageRating(tutor.getAverageRating())
+               .ratingCount(tutor.getRatingCount())
+               .expertiseAreas(tutor.getExpertiseAreasString());
+    }
+
+    return builder.build();
+  public static SessionResponseDto toSessionResponseDto(Session session) {
+    if (session == null) {
+      return null;
+    }
+
+    String tutorName = (session.getTutor() != null)
+        ? session.getTutor().getFirstName() + " " + session.getTutor().getLastName()
+        : null;
+
+    String studentName = (session.getStudent() != null)
+        ? session.getStudent().getFirstName() + " " + session.getStudent().getLastName()
+        : null;
+
+    return SessionResponseDto.builder()
+        .sessionId(session.getSessionId())
+        .tutorId(session.getTutor() != null ? session.getTutor().getTutorId() : null)
+        .tutorName(tutorName)
+        .studentId(session.getStudent() != null ? session.getStudent().getStudentId() : null)
+        .studentName(studentName)
+        .startTime(session.getStartTime())
+        .endTime(session.getEndTime())
+        .mode(session.getMode())
+        .locationOrLink(session.getLocationOrLink())
+        .status(session.getStatus())
+        .build();
+  }
 }

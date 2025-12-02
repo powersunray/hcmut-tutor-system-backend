@@ -1,8 +1,5 @@
 package hcmut.edu.vn.tutor_support_system.exception;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +12,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -161,6 +162,42 @@ public class GlobalExceptionHandler {
             LocalDateTime.now(),
             request.getDescription(false));
     return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(AvailabilityNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleAvailabilityNotFoundException(
+      AvailabilityNotFoundException ex, WebRequest request) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            HttpStatus.NOT_FOUND.value(),
+            ex.getMessage(),
+            LocalDateTime.now(),
+            request.getDescription(false));
+    return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(SessionNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleSessionNotFoundException(
+      SessionNotFoundException ex, WebRequest request) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            HttpStatus.NOT_FOUND.value(),
+            ex.getMessage(),
+            LocalDateTime.now(),
+            request.getDescription(false));
+    return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(BookingConflictException.class)
+  public ResponseEntity<ErrorResponse> handleBookingConflictException(
+      BookingConflictException ex, WebRequest request) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            HttpStatus.CONFLICT.value(),
+            ex.getMessage(),
+            LocalDateTime.now(),
+            request.getDescription(false));
+    return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
   }
 
   @Getter

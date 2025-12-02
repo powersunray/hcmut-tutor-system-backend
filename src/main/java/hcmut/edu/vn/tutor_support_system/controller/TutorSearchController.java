@@ -37,6 +37,14 @@ public class TutorSearchController {
     return ResponseEntity.ok(results);
   }
 
+  @GetMapping("/recommend")
+  public ResponseEntity<List<TutorSearchResultDto>> recommendTutors(
+      @RequestParam String studentId,
+      @RequestParam(required = false) String subjectId) {
+    List<TutorSearchResultDto> results = tutorSearchService.recommendTutors(studentId, subjectId);
+    return ResponseEntity.ok(results);
+  }
+  
   // UC-4 step 6: return a DTO profile (no cycles)
   @GetMapping("/{tutorId}")
   public ResponseEntity<TutorProfileDto> getTutorProfile(@PathVariable String tutorId) {
