@@ -4,6 +4,9 @@ import hcmut.edu.vn.tutor_support_system.dto.AvailabilityDto;
 import hcmut.edu.vn.tutor_support_system.dto.EnrollmentDto;
 import hcmut.edu.vn.tutor_support_system.dto.StaffDto;
 import hcmut.edu.vn.tutor_support_system.dto.SupportNeedDto;
+import hcmut.edu.vn.tutor_support_system.dto.UserDto;
+import hcmut.edu.vn.tutor_support_system.dto.CreateUserRequest;
+import hcmut.edu.vn.tutor_support_system.entity.User;
 import hcmut.edu.vn.tutor_support_system.dto.TutorProfileDto;
 import hcmut.edu.vn.tutor_support_system.dto.UserProfileDto;
 import hcmut.edu.vn.tutor_support_system.dto.*;
@@ -91,6 +94,28 @@ public final class DtoMapper {
         .build();
   }
 
+  public static UserDto toUserDto(User u) {
+    if (u == null) return null;
+    return UserDto.builder()
+        .id(u.getId())
+        .firstName(u.getFirstName())
+        .lastName(u.getLastName())
+        .email(u.getEmail())
+        .role(u.getRole())
+        .createdAt(u.getCreatedAt())
+        .updatedAt(u.getUpdatedAt())
+        .build();
+}
+
+    public static User toUserEntity(CreateUserRequest req) {
+        if (req == null) return null;
+        User u = new User();
+        u.setFirstName(req.getFirstName());
+        u.setLastName(req.getLastName());
+        u.setEmail(req.getEmail());
+        u.setRole(req.getRole());
+        return u;
+    }
   public static UserProfileDto toUserProfileDto(User user) {
     UserProfileDto.UserProfileDtoBuilder builder = UserProfileDto.builder()
         .id(user.getId())
