@@ -92,6 +92,30 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(FeedbackException.class)
+  public ResponseEntity<ErrorResponse> handleFeedbackException(
+      FeedbackException ex, WebRequest request) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            ex.getMessage(),
+            LocalDateTime.now(),
+            request.getDescription(false));
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(MaterialUploadException.class)
+  public ResponseEntity<ErrorResponse> handleMaterialUploadException(
+      MaterialUploadException ex, WebRequest request) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            ex.getMessage(),
+            LocalDateTime.now(),
+            request.getDescription(false));
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<Map<String, Object>> handleValidationErrors(
       MethodArgumentNotValidException ex) {
