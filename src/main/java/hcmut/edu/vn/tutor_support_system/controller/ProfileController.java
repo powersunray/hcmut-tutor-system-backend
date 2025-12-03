@@ -11,6 +11,8 @@ import hcmut.edu.vn.tutor_support_system.repository.StudentRepository;
 import hcmut.edu.vn.tutor_support_system.repository.TutorRepository;
 import hcmut.edu.vn.tutor_support_system.repository.UserRepository;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +52,7 @@ public class ProfileController {
         Profile profile = user.getProfile();
         if (profile == null) {
             profile = new Profile();
-            profile.setProfileId("PROF-" + UUID.randomUUID());
+            profile.setProfileId("PROF-" + UUID.randomUUID().toString());
             user.setProfile(profile);
         }
 
@@ -60,15 +62,23 @@ public class ProfileController {
         profile.setGender(dto.getGender());
 
         // Student-specific fields
-        if (user instanceof Student student) {
+        if (user instanceof Student) {
+            Student student = (Student) user;
             student.setFaculty(dto.getFaculty());
             student.setMajor(dto.getMajor());
             studentRepository.save(student);
 
         // Tutor-specific fields
-        } else if (user instanceof Tutor tutor) {
+        } else if (user instanceof Tutor) {
+            Tutor tutor = (Tutor) user;
             tutor.setBio(dto.getBio());
-            tutor.setExpertiseAreas(dto.getExpertiseAreas());
+
+            // Use expertise areas from DTO (already a List<String>)
+            List<String> expertiseList = dto.getExpertiseAreas();
+            if (expertiseList == null) {
+                expertiseList = new ArrayList<>();
+            }
+            tutor.setExpertiseAreas(expertiseList);
             tutorRepository.save(tutor);
 
         } else {

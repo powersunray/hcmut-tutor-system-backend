@@ -130,7 +130,7 @@ public final class DtoMapper {
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
         .email(user.getEmail())
-        .role(user.getRole() != null ? user.getRole().name() : null)
+        .role(user.getRole())
         .createdAt(user.getCreatedAt())
         .updatedAt(user.getUpdatedAt());
         
@@ -150,10 +150,12 @@ public final class DtoMapper {
                .bio(tutor.getBio()) // Tutor has its own bio field which might override or complement Profile bio
                .averageRating(tutor.getAverageRating())
                .ratingCount(tutor.getRatingCount())
-               .expertiseAreas(tutor.getExpertiseAreasString());
+               .expertiseAreas(tutor.getExpertiseAreas());
     }
 
     return builder.build();
+  }
+
   public static SessionResponseDto toSessionResponseDto(Session session) {
     if (session == null) {
       return null;
