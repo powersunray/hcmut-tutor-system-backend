@@ -180,6 +180,9 @@ public final class DtoMapper {
         .mode(session.getMode())
         .locationOrLink(session.getLocationOrLink())
         .status(session.getStatus())
+        .build();
+  }
+
   public static FeedbackDto toFeedbackDto(Feedback feedback) {
     return FeedbackDto.builder()
         .feedbackId(feedback.getFeedbackId())
