@@ -1,27 +1,27 @@
 -- JPA-Friendly Dummy Data for Student Tutoring System
 
--- Insert profiles first
+-- Insert profiles with SAME UUID as corresponding users
 INSERT INTO profiles (id, profile_id, phone_number, campus, address, gender) VALUES
-('11111111-1111-1111-1111-111111111111', 'profile-t1', '0909999999', 'Campus 01', NULL, NULL),
-('22222222-2222-2222-2222-222222222222', 'profile-t2', '0911111111', 'Campus 02', NULL, NULL),
-('33333333-3333-3333-3333-333333333333', 'profile-s1', '0922222222', 'Campus 01', NULL, NULL),
-('44444444-4444-4444-4444-444444444444', 'profile-s2', '0933333333', 'Campus 02', NULL, NULL);
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'profile-t1', '0909999999', 'Campus 01', NULL, NULL),
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'profile-t2', '0911111111', 'Campus 02', NULL, NULL),
+('cccccccc-cccc-cccc-cccc-cccccccccccc', 'profile-s1', '0922222222', 'Campus 01', NULL, NULL),
+('dddddddd-dddd-dddd-dddd-dddddddddddd', 'profile-s2', '0933333333', 'Campus 02', NULL, NULL);
 
 -- Insert tutors
 INSERT INTO users (id, user_type, first_name, last_name, email, role, profile_id, tutor_id, bio, expertise_areas, average_rating, rating_count) VALUES
 ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'TUTOR', 'Hieu', 'Tran', 'hieu.tran@hcmut.edu.vn', 'TUTOR',
- '11111111-1111-1111-1111-111111111111', 'tutor-1', 'Experienced software engineering tutor',
+ 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'tutor-1', 'Experienced software engineering tutor',
  'CO3001,Software Engineering', 4.8, 12),
 ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'TUTOR', 'Tam', 'Nguyen', 'tam.nguyen@hcmut.edu.vn', 'TUTOR',
- '22222222-2222-2222-2222-222222222222', 'tutor-2', 'Math and discrete math specialist',
+ 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'tutor-2', 'Math and discrete math specialist',
  'CO2013,Discrete Math', 4.2, 7);
 
 -- Insert students (student_id must be 7 digits per ValidationUtil)
 INSERT INTO users (id, user_type, first_name, last_name, email, role, profile_id, student_id, faculty, major) VALUES
 ('cccccccc-cccc-cccc-cccc-cccccccccccc', 'STUDENT', 'John', 'Doe', 'john.doe@hcmut.edu.vn', 'STUDENT',
- '33333333-3333-3333-3333-333333333333', '2110001', 'Computer Science', 'Software Engineering'),
+ 'cccccccc-cccc-cccc-cccc-cccccccccccc', '2110001', 'Computer Science', 'Software Engineering'),
 ('dddddddd-dddd-dddd-dddd-dddddddddddd', 'STUDENT', 'Jane', 'Smith', 'jane.smith@hcmut.edu.vn', 'STUDENT',
- '44444444-4444-4444-4444-444444444444', '2110002', 'Electrical Engineering', 'Electronics');
+ 'dddddddd-dddd-dddd-dddd-dddddddddddd', '2110002', 'Electrical Engineering', 'Electronics');
 
 -- Insert subjects
 INSERT INTO subjects (id, code, name, credits, description) VALUES
@@ -52,32 +52,32 @@ INSERT INTO feedback (id, feedback_id, session_id, rating, comment) VALUES
 -- ADDITIONAL TEST DATA FOR ENROLLMENT, SUPPORT NEEDS, AND STAFF
 -- ============================================
 
--- Insert additional profiles for more students and staff
+-- Insert additional profiles for more students and staff (SAME UUID as users)
 INSERT INTO profiles (id, profile_id, phone_number, campus, address, gender) VALUES
-('55555555-5555-5555-5555-555555555555', 'profile-s3', '0944444444', 'Campus 01', '123 Le Loi St, District 1', 'MALE'),
-('66666666-6666-6666-6666-666666666666', 'profile-s4', '0955555555', 'Campus 02', '456 Nguyen Hue St, District 1', 'FEMALE'),
-('77777777-7777-7777-7777-777777777777', 'profile-s5', '0966666666', 'Campus 01', '789 Tran Hung Dao St, District 5', 'MALE'),
-('88888888-8888-8888-8888-888888888888', 'profile-staff1', '0977777777', 'Campus 01', NULL, 'FEMALE'),
-('99999999-9999-9999-9999-999999999999', 'profile-staff2', '0988888888', 'Campus 02', NULL, 'MALE'),
-('aaaaaaaa-aaaa-aaaa-aaaa-000000000001', 'profile-staff3', '0999999999', 'Campus 01', NULL, 'FEMALE');
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'profile-s3', '0944444444', 'Campus 01', '123 Le Loi St, District 1', 'MALE'),
+('ffffffff-ffff-ffff-ffff-ffffffffffff', 'profile-s4', '0955555555', 'Campus 02', '456 Nguyen Hue St, District 1', 'FEMALE'),
+('10101010-1010-1010-1010-101010101010', 'profile-s5', '0966666666', 'Campus 01', '789 Tran Hung Dao St, District 5', 'MALE'),
+('20202020-2020-2020-2020-202020202020', 'profile-staff1', '0977777777', 'Campus 01', NULL, 'FEMALE'),
+('30303030-3030-3030-3030-303030303030', 'profile-staff2', '0988888888', 'Campus 02', NULL, 'MALE'),
+('40404040-4040-4040-4040-404040404040', 'profile-staff3', '0999999999', 'Campus 01', NULL, 'FEMALE');
 
 -- Insert additional students (total 5 students for testing)
 INSERT INTO users (id, user_type, first_name, last_name, email, role, profile_id, student_id, faculty, major) VALUES
 ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'STUDENT', 'Michael', 'Johnson', 'michael.johnson@hcmut.edu.vn', 'STUDENT',
- '55555555-5555-5555-5555-555555555555', '2110003', 'Computer Science', 'Software Engineering'),
+ 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '2110003', 'Computer Science', 'Software Engineering'),
 ('ffffffff-ffff-ffff-ffff-ffffffffffff', 'STUDENT', 'Emily', 'Williams', 'emily.williams@hcmut.edu.vn', 'STUDENT',
- '66666666-6666-6666-6666-666666666666', '2110004', 'Electrical Engineering', 'Computer Engineering'),
+ 'ffffffff-ffff-ffff-ffff-ffffffffffff', '2110004', 'Electrical Engineering', 'Computer Engineering'),
 ('10101010-1010-1010-1010-101010101010', 'STUDENT', 'David', 'Brown', 'david.brown@hcmut.edu.vn', 'STUDENT',
- '77777777-7777-7777-7777-777777777777', '2110005', 'Mechanical Engineering', 'Mechatronics');
+ '10101010-1010-1010-1010-101010101010', '2110005', 'Mechanical Engineering', 'Mechatronics');
 
 -- Insert staff members (3 staff with different roles)
 INSERT INTO users (id, user_type, first_name, last_name, email, role, profile_id, staff_id, staff_role, department) VALUES
 ('20202020-2020-2020-2020-202020202020', 'STAFF', 'Sarah', 'Martinez', 'sarah.martinez@hcmut.edu.vn', 'STAFF',
- '88888888-8888-8888-8888-888888888888', 'staff-001', 'ADS', 'Academic Development Services'),
+ '20202020-2020-2020-2020-202020202020', 'staff-001', 'ADS', 'Academic Development Services'),
 ('30303030-3030-3030-3030-303030303030', 'STAFF', 'Robert', 'Garcia', 'robert.garcia@hcmut.edu.vn', 'STAFF',
- '99999999-9999-9999-9999-999999999999', 'staff-002', 'OAA', 'Office of Academic Affairs'),
+ '30303030-3030-3030-3030-303030303030', 'staff-002', 'OAA', 'Office of Academic Affairs'),
 ('40404040-4040-4040-4040-404040404040', 'STAFF', 'Linda', 'Rodriguez', 'linda.rodriguez@hcmut.edu.vn', 'STAFF',
- 'aaaaaaaa-aaaa-aaaa-aaaa-000000000001', 'staff-003', 'OSA', 'Office of Student Affairs');
+ '40404040-4040-4040-4040-404040404040', 'staff-003', 'OSA', 'Office of Student Affairs');
 
 -- Insert enrollments (testing various scenarios)
 -- Note: Semester format is YYS where YY=year last 2 digits, S=1,2,3
