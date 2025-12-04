@@ -38,12 +38,15 @@ public final class DtoMapper {
 
   public static AvailabilityDto toAvailabilityDto(Availability a) {
     return AvailabilityDto.builder()
-        .availabilityId(a.getId())
+        .uuid(a.getUuid() != null ? a.getUuid().toString() : null) // Real database UUID
+        .availabilityId(a.getAvailabilityId()) // Business ID (e.g., "slot-1")
         .dayOfWeek(a.getDayOfWeek().name())
         .startTime(a.getStartTime().format(TIME))
         .endTime(a.getEndTime().format(TIME))
         .mode(a.getMode())
         .locationOrLink(a.getLocationOrLink())
+        .capacity(a.getCapacity())
+        .published(a.isPublished())
         .build();
   }
 

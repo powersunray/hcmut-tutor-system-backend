@@ -72,6 +72,11 @@ public class Availability {
     this.availabilityId = id;
   }
 
+  // Get the actual UUID (database primary key)
+  public UUID getUuid() {
+    return id;
+  }
+
   public int getCapacity() {
     return capacity != null ? capacity : 1;
   }

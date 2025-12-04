@@ -10,11 +10,14 @@ import lombok.*;
 @Builder
 public class AvailabilityDto {
 
-  private String availabilityId;
+  private String uuid; // Database UUID for PUT/DELETE operations
+  private String availabilityId; // Business ID (e.g., "slot-1")
   private String dayOfWeek; // MONDAY, TUESDAY...
   private String startTime; // "09:00"
   private String endTime; // "10:00"
 
   private SessionMode mode; // ONLINE / OFFLINE / HYBRID
   private String locationOrLink;
+  private Integer capacity;
+  private Boolean published;
 }
