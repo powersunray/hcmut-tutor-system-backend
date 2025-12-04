@@ -12,7 +12,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-BASE_URL="http://localhost:8080/"
+BASE_URL="http://localhost:8080"
 TEST_RESULTS=()
 PASS_COUNT=0
 FAIL_COUNT=0
