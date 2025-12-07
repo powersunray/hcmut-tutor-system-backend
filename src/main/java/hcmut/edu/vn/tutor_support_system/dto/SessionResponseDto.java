@@ -16,9 +16,10 @@ public class SessionResponseDto {
 
   private String tutorId;
   private String tutorName;
-
+  private String subjectName;
   private String studentId; // Student number (e.g., "2110001")
   private String studentUuid; // Student UUID for fetching profile
+  private String title;
   private String studentName;
   private String studentEmail;
 

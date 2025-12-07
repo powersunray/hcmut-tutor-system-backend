@@ -1,6 +1,7 @@
 package hcmut.edu.vn.tutor_support_system.controller;
 
 import hcmut.edu.vn.tutor_support_system.dto.SupportNeedDto;
+import hcmut.edu.vn.tutor_support_system.dto.SupportNeedRequest;
 import hcmut.edu.vn.tutor_support_system.entity.SupportNeedStatus;
 import hcmut.edu.vn.tutor_support_system.entity.SupportType;
 import hcmut.edu.vn.tutor_support_system.service.SupportNeedService;
@@ -40,12 +41,16 @@ public class SupportNeedController {
 
   @PostMapping("/students/{studentId}/support-needs")
   public ResponseEntity<SupportNeedDto> createSupportNeed(
-      @PathVariable String studentId,
-      @RequestParam SupportType supportType,
-      @RequestParam(required = false) String description) {
-    SupportNeedDto supportNeed =
-        supportNeedService.createSupportNeed(studentId, supportType, description);
-    return ResponseEntity.status(HttpStatus.CREATED).body(supportNeed);
+          @PathVariable String studentId,
+          @RequestBody SupportNeedRequest request) {
+  
+      SupportNeedDto supportNeed =
+              supportNeedService.createSupportNeed(
+                      studentId,
+                      request.getSupportType(),
+                      request.getDescription());
+  
+      return ResponseEntity.status(HttpStatus.CREATED).body(supportNeed);
   }
 
   @PutMapping("/support-needs/{supportNeedId}/status")
@@ -58,8 +63,7 @@ public class SupportNeedController {
   @PutMapping("/support-needs/{supportNeedId}/description")
   public ResponseEntity<SupportNeedDto> updateSupportNeedDescription(
       @PathVariable UUID supportNeedId, @RequestParam String description) {
-    SupportNeedDto supportNeed =
-        supportNeedService.updateSupportNeedDescription(supportNeedId, description);
+    SupportNeedDto supportNeed = supportNeedService.updateSupportNeedDescription(supportNeedId, description);
     return ResponseEntity.ok(supportNeed);
   }
 

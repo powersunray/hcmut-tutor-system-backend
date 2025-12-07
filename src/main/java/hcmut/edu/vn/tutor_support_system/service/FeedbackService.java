@@ -76,14 +76,6 @@ public class FeedbackService {
                     new ResourceNotFoundException(
                         "Session not found with id: " + request.getSessionId()));
 
-    // Check if feedback already exists for this session
-    feedbackRepository
-        .findBySession(session)
-        .ifPresent(
-            f -> {
-              throw new FeedbackException(
-                  "Feedback already exists for session: " + request.getSessionId());
-            });
 
     Feedback feedback = new Feedback();
     feedback.setFeedbackId("FB-" + UUID.randomUUID().toString());

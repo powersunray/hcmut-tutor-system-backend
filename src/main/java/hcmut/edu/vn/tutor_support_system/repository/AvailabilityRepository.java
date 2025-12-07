@@ -22,6 +22,8 @@ public interface AvailabilityRepository extends JpaRepository<Availability, UUID
 
   List<Availability> findByTutor(Tutor tutor);
 
+  List<Availability> findByTutorId(UUID tutorId);
+  
   @Query("SELECT a FROM Availability a WHERE a.dayOfWeek = :dayOfWeek AND a.published = true")
   List<Availability> findByDayOfWeekAndPublishedTrue(@Param("dayOfWeek") DayOfWeek dayOfWeek);
 

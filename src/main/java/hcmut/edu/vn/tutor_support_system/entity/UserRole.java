@@ -5,5 +5,6 @@ public enum UserRole {
   TUTOR,
   STAFF,
   ADMIN,
-  EMPTY
+  EMPTY, 
+  OSA
 }

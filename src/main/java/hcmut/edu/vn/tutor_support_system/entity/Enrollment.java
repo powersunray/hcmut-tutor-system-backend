@@ -1,6 +1,8 @@
 package hcmut.edu.vn.tutor_support_system.entity;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.*;
@@ -33,8 +35,8 @@ public class Enrollment {
   @Column(name = "semester", length = 50)
   private String semester;
 
-  @Column(name = "grade", length = 10)
-  private String grade;
+  @Column(name = "grade", precision = 4, scale = 2)
+  private BigDecimal grade;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "enrollment_status", length = 50)
