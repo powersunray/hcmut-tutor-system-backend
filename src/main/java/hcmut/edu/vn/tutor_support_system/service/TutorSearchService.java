@@ -44,13 +44,11 @@ public class TutorSearchService {
       SessionMode mode,
       Double minRating,
       boolean useAiRecommendations) {
-
-    // Optimized query filters by mode directly in DB
+    String modeStr = (mode != null) ? mode.name() : null; 
     List<Tutor> filtered =
-        tutorRepository.searchTutors(tutorName, courseCode, campus, minRating, mode);
+        tutorRepository.searchTutors(tutorName, courseCode, campus, minRating, modeStr);
 
     if (filtered.isEmpty()) {
-      // UC-4 alt flow 5a: "No matches found" (controller will handle message/UI)
       return Collections.emptyList();
     }
 

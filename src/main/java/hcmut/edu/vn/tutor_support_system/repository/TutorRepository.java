@@ -13,20 +13,25 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TutorRepository extends JpaRepository<Tutor, UUID> {
 
-  Optional<Tutor> findByTutorId(String tutorId);
+    Optional<Tutor> findByTutorId(String tutorId);
 
-  @Query(
-      "SELECT DISTINCT t FROM Tutor t "
-          + "LEFT JOIN t.availabilitySlots a "
-          + "WHERE (:name IS NULL OR LOWER(t.firstName) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(t.lastName) LIKE LOWER(CONCAT('%', :name, '%'))) "
-          + "AND (:expertise IS NULL OR t.expertiseAreasString LIKE CONCAT('%', :expertise, '%')) "
-          + "AND (:campus IS NULL OR t.profile.campus = :campus) "
-          + "AND (:minRating IS NULL OR t.averageRating >= :minRating) "
-          + "AND (:mode IS NULL OR a.mode = :mode OR a.mode = 'HYBRID')")
-  List<Tutor> searchTutors(
-      @Param("name") String name,
-      @Param("expertise") String expertise,
-      @Param("campus") String campus,
-      @Param("minRating") Double minRating,
-      @Param("mode") SessionMode mode);
+    @Query(value = """
+            SELECT DISTINCT t.*
+            FROM users t
+            LEFT JOIN availabilities a ON t.id = a.tutor_id
+            LEFT JOIN profiles p ON p.id = t.profile_id
+            WHERE t.user_type = 'TUTOR'
+            AND (:name IS NULL OR t.first_name ILIKE CONCAT('%', :name, '%')
+                         OR t.last_name ILIKE CONCAT('%', :name, '%'))
+            AND (:expertise IS NULL OR t.expertise_areas ILIKE CONCAT('%', :expertise, '%'))
+            AND (:campus IS NULL OR p.campus = :campus)
+            AND (:minRating IS NULL OR t.average_rating >= :minRating)
+            AND (:mode IS NULL OR a.mode = CAST(:mode AS text) OR a.mode = 'HYBRID')
+            """, nativeQuery = true)
+    List<Tutor> searchTutors(
+            @Param("name") String name,
+            @Param("expertise") String expertise,
+            @Param("campus") String campus,
+            @Param("minRating") Double minRating,
+            @Param("mode") String modeStr);
 }

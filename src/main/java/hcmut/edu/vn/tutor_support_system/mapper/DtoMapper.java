@@ -178,6 +178,7 @@ public final class DtoMapper {
         .tutorName(tutorName)
         .studentId(session.getStudent() != null ? session.getStudent().getStudentId() : null)
         .studentUuid(session.getStudent() != null ? session.getStudent().getId().toString() : null)
+        .title(session.getTitle())
         .studentName(studentName)
         .studentEmail(session.getStudent() != null ? session.getStudent().getEmail() : null)
         .startTime(session.getStartTime())
